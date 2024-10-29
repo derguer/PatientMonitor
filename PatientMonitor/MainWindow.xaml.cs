@@ -31,7 +31,7 @@ namespace PatientMonitor
         private int index = 0;
         Patient patient;
 
-        string lastPatientName;
+        string lastPatientName = "";
         int lastPatientAge;
         DateTime dateTime;
         double lastFrequency;
@@ -54,7 +54,8 @@ namespace PatientMonitor
         private void Timer_Tick(object sender, EventArgs e)
         {
             // Generate a new data point
-            dataPoints.Add(new KeyValuePair<int, double>(index++, patient.NextSample(index)));
+            
+            if (patient != null) dataPoints.Add(new KeyValuePair<int, double>(index++, patient.NextSample(index)));
 
             // Optional: Remove old points to keep the chart clean
             if (dataPoints.Count > 200) // Maximum number of points
@@ -71,7 +72,7 @@ namespace PatientMonitor
         private void textBoxPatientAge_TextChanged(object sender, TextChangedEventArgs e)
         {
             int.TryParse(textBoxPatientAge.Text, out int parsedage);
-            lastPatientAge = int.Parse(textBlockPatientAge.Text);
+            lastPatientAge = parsedage;
 
         }
 
@@ -95,6 +96,29 @@ namespace PatientMonitor
 
         private void buttonCreatePatient_Click(object sender, RoutedEventArgs e)
         {
+
+            bool isAgeValid = int.TryParse(textBoxPatientAge.Text, out int patientAge);
+
+            bool isNameValid = textBoxPatientName.Text != "Enter name here" &&
+            !string.IsNullOrWhiteSpace(textBoxPatientName.Text);
+
+            bool isDateSelected = datePickerDate.SelectedDate.HasValue;
+
+            if (isNameValid && isAgeValid && isDateSelected)
+            {
+                //lastPatientName = textBlockPatientName.Text;
+                patient = new Patient(lastPatientName, lastPatientAge, dateTime, ampValue, lastFrequency, lastHarmonics);
+                
+                lastPatient = true;
+                buttonUpdatePatient.IsEnabled = true;
+                
+                MessageBox.Show("Patient was created!");
+                //buttonStartSimulation.IsEnabled = true;
+            }
+            else
+            {
+                MessageBox.Show("Fill all boxes!");
+            }
 
         }
 
@@ -165,7 +189,8 @@ namespace PatientMonitor
 
         private void ComboBoxHarmonics_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            lastHarmonics = comboBoxHarmonics.SelectedIndex;
+            if (lastPatient) patient.ECGHarmonics = lastHarmonics;
         }
 
         private void textBoxPatientAge_LostFocus(object sender, RoutedEventArgs e)

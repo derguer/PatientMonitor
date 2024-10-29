@@ -22,6 +22,12 @@ namespace PatientMonitor
             this.patientName = patientName; this.age = age; this.dateOfStudy = dateOfStudy;
             ecg = new ECG(amplitude, frequency, harmonics);
         }
+        public Patient(string patientName, int age, DateTime dateOfStudy)
+        {
+            this.patientName = patientName; this.age = age; this.dateOfStudy = dateOfStudy;
+            ecg = new ECG();
+        }
+
 
 
         public double ECGAmplitude { set {ecg.Amplitude=value; } }

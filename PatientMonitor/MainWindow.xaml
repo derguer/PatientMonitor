@@ -15,10 +15,10 @@
                                         IndependentValueBinding="{Binding Key}"
                                         DependentValueBinding="{Binding Value}">
                 <toolkit:LineSeries.IndependentAxis>
-                    <toolkit:LinearAxis Orientation="X" Title="Time" />
+                    <toolkit:LinearAxis Orientation="X" Title="Time (ms)" />
                 </toolkit:LineSeries.IndependentAxis>
                 <toolkit:LineSeries.DependentRangeAxis>
-                    <toolkit:LinearAxis Orientation="Y" Title="Value" />
+                    <toolkit:LinearAxis Orientation="Y" Title="Value (mA)" />
                 </toolkit:LineSeries.DependentRangeAxis>
             </toolkit:LineSeries>
         </toolkit:Chart>
