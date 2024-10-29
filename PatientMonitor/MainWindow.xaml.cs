@@ -29,24 +29,23 @@ namespace PatientMonitor
         private ObservableCollection<KeyValuePair<int, double>> dataPoints;
         private DispatcherTimer timer;
         private int index = 0;
-        ECG ecg;
+        Patient patient;
 
         public MainWindow()
         {
             InitializeComponent();
             dataPoints = new ObservableCollection<KeyValuePair<int, double>>();
             lineSeriesECG.ItemsSource = dataPoints; // Bind the series to the data points
-            ecg = new ECG(100, (double)1.0);
-
+            
             timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(0.025); // Set timer to tick every second
+            timer.Interval = TimeSpan.FromMilliseconds(1); // Set timer to tick every second
             timer.Tick += Timer_Tick;
             timer.Start();
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
             // Generate a new data point
-            dataPoints.Add(new KeyValuePair<int, double>(index++, ecg.NextSample(index)));
+            dataPoints.Add(new KeyValuePair<int, double>(index++, patient.NextSample(index)));
 
             // Optional: Remove old points to keep the chart clean
             if (dataPoints.Count > 200) // Maximum number of points
