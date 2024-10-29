@@ -31,6 +31,15 @@ namespace PatientMonitor
         private int index = 0;
         Patient patient;
 
+        string lastPatientName;
+        int lastPatientAge;
+        DateTime dateTime;
+        double lastFrequency;
+        int lastHarmonics;
+        double ampValue;
+        bool lastPatient = false;
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -51,6 +60,120 @@ namespace PatientMonitor
             if (dataPoints.Count > 200) // Maximum number of points
             {
                 dataPoints.RemoveAt(0); // Remove the oldest point
+            }
+        }
+
+        private void textBoxPatientName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            lastPatientName = textBlockPatientName.Text;
+        }
+
+        private void textBoxPatientAge_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int.TryParse(textBoxPatientAge.Text, out int parsedage);
+            lastPatientAge = int.Parse(textBlockPatientAge.Text);
+
+        }
+
+        private void textBoxFrequencyValue_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            double.TryParse(textBoxFrequencyValue.Text, out double parsedFrequency);
+            lastFrequency = parsedFrequency;
+            if (lastPatient) { patient.ECGFrequency = lastFrequency; }
+        }
+
+        private void sliderAmplitudeValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            ampValue = sliderAmplitudeValue.Value;
+            if (lastPatient) patient.ECGAmplitude = ampValue;
+        }
+
+        private void datePickerDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            dateTime = datePickerDate.SelectedDate.Value;
+        }
+
+        private void buttonCreatePatient_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void buttonQuit_Click(object sender, RoutedEventArgs e)
+        {
+            timer.Stop();
+        }
+
+        private void buttonParameter_Click(object sender, RoutedEventArgs e)
+        {
+            timer.Start();
+            sliderAmplitudeValue.IsEnabled = true;
+            textBoxFrequencyValue.IsEnabled = true;
+            comboBoxHarmonics.IsEnabled = true;
+        }
+
+        private void textBoxPatientAge_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !int.TryParse(e.Text, out _);
+        }
+
+        private void textBoxFrequencyValue_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !int.TryParse(e.Text, out _);
+        }
+
+        private void textBoxPatientName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox && string.IsNullOrEmpty(textBox.Text))
+            {
+                textBox.Text = "Enter name here";
+                textBox.Foreground = Brushes.Red;
+            }
+
+        }
+
+        private void textBoxPatientName_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                textBox.Clear();
+                textBox.Foreground = Brushes.Black;
+            }
+        }
+
+        private void textBoxFrequencyValue_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                textBox.Clear();
+                textBox.Foreground = Brushes.Black;
+            }
+        }
+
+        private void textBoxFrequencyValue_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox && string.IsNullOrEmpty(textBox.Text))
+            {
+                textBox.Text = "Enter frequency here";
+                textBox.Foreground = Brushes.Red;
+            }
+        }
+
+        private void buttonUpdatePatient_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ComboBoxHarmonics_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxPatientAge_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox && string.IsNullOrEmpty(textBox.Text))
+            {
+                textBox.Text = "Enter age here";
+                textBox.Foreground = Brushes.Red;
             }
         }
     }
