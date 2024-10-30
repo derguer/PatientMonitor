@@ -56,7 +56,7 @@ namespace PatientMonitor
         {
             // Generate a new data point
             
-            if (patient != null) dataPoints.Add(new KeyValuePair<int, double>(index++, patient.NextSample(index)));
+            if (patient != null) dataPoints.Add(new KeyValuePair<int, double>(index++, patient.NextSample(index, parameter)));
 
             // Optional: Remove old points to keep the chart clean
             if (dataPoints.Count > 200) // Maximum number of points
