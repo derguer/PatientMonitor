@@ -39,6 +39,7 @@ namespace PatientMonitor
         double ampValue;
         bool lastPatient = false;
 
+        MonitorConstants.Parameter parameter = MonitorConstants.Parameter.ECG;
 
         public MainWindow()
         {
