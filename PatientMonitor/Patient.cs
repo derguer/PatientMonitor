@@ -30,6 +30,7 @@ namespace PatientMonitor
         {
             this.patientName = patientName; this.age = age; this.dateOfStudy = dateOfStudy;
             ecg = new ECG();
+            emg = new EMG();
         }
 
 
@@ -43,17 +44,17 @@ namespace PatientMonitor
         public double EMGFrequency { set { emg.Frequency = value; } get { return emg.Frequency; } }
         public int EMGHarmonics { set { emg.Harmonics = value; } get { return emg.Harmonics; } }
 
-        public double NextSample(double timeIndex, Constants.Parameter parameter)
+        public double NextSample(double timeIndex, MonitorConstants.Parameter parameter)
         {
             double nextSample = 0.0;
             //nextSample = this.ecg.NextSample(timeIndex)
 
             switch (parameter)
             {
-                case Constants.Parameter.ECG:
+                case MonitorConstants.Parameter.ECG:
                     nextSample = ecg.NextSample(timeIndex);
                     break;
-                case Constants.Parameter.EMG:
+                case MonitorConstants.Parameter.EMG:
                     nextSample = emg.NextSample(timeIndex);
                     break;
                 default:

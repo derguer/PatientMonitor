@@ -87,12 +87,25 @@ namespace PatientMonitor
         private void sliderAmplitudeValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             ampValue = sliderAmplitudeValue.Value;
-            if (lastPatient) patient.ECGAmplitude = ampValue;
+            switch (parameter)
+            {
+                case (MonitorConstants.Parameter.ECG):
+                    if (lastPatient) patient.ECGAmplitude = ampValue;
+                    break;
+                case (MonitorConstants.Parameter.EMG):
+                    if (lastPatient) patient.EMGAmplitude = ampValue;
+                    break;
+                case (MonitorConstants.Parameter.EEG):
+                    //if (lastPatient) patient.EEGAmplitude = ampValue; noch nicht die klasse implimentiert 
+                    break;
+            }
+            
         }
 
         private void datePickerDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             dateTime = datePickerDate.SelectedDate.Value;
+            
         }
 
         private void buttonCreatePatient_Click(object sender, RoutedEventArgs e)
@@ -104,6 +117,10 @@ namespace PatientMonitor
             !string.IsNullOrWhiteSpace(textBoxPatientName.Text);
 
             bool isDateSelected = datePickerDate.SelectedDate.HasValue;
+
+            if (!isNameValid) MessageBox.Show("Name is not Valid!");
+            if (!isAgeValid) MessageBox.Show("Age is not Valid!");
+            if (!isDateSelected) MessageBox.Show("Date is not Valid!");
 
             if (isNameValid && isAgeValid && isDateSelected)
             {
@@ -134,6 +151,7 @@ namespace PatientMonitor
             sliderAmplitudeValue.IsEnabled = true;
             textBoxFrequencyValue.IsEnabled = true;
             comboBoxHarmonics.IsEnabled = true;
+            comboBoxParameter.IsEnabled = true;
         }
 
         private void textBoxPatientAge_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -192,6 +210,7 @@ namespace PatientMonitor
         {
             lastHarmonics = comboBoxHarmonics.SelectedIndex;
             if (lastPatient) patient.ECGHarmonics = lastHarmonics;
+
         }
 
         private void textBoxPatientAge_LostFocus(object sender, RoutedEventArgs e)
@@ -202,5 +221,19 @@ namespace PatientMonitor
                 textBox.Foreground = Brushes.Red;
             }
         }
+        private void comboBoxParameter_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            if (comboBox.IsEnabled) { comboBox.SelectionChanged += comboBoxParameter_SelectionChanged; }
+            else { comboBox.SelectionChanged -= comboBoxParameter_SelectionChanged; }
+            
+        }
+
+        private void comboBoxParameter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            parameter = (MonitorConstants.Parameter)comboBoxParameter.SelectedIndex;
+        }
+
+
     }
 }

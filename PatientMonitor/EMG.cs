@@ -10,9 +10,9 @@ namespace PatientMonitor
     {
         //Parameters
         const double HzToBeatsPerMin = 60.0;
-        private double amplitude = 0.0;
-        private double frequency = 0;
-        private int harmonics = 0;
+        private double amplitude = 1.0;
+        private double frequency = 5;
+        private int harmonics = 1;
         public double Amplitude
         {
             set { amplitude = value; }
@@ -34,12 +34,16 @@ namespace PatientMonitor
             this.frequency = frequency;
             this.harmonics = harmonics;
         }
+        public EMG() { }
+
         public double NextSample(double timeIndex)
         {
+            const double HzToBeatsPerMin = 6000.0;
+
             double sample = 0.0;
             double stepIndex = 0.0;
             double signalLength = 0.0;
-            signalLength = (double)(HzToBeatsPerMin / (this.frequency));
+            signalLength = (double)(1.0 * HzToBeatsPerMin /frequency);
             stepIndex = (double)(timeIndex % signalLength);
             if (stepIndex > (signalLength / 2.0))
             {

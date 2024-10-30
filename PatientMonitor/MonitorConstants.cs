@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PatientMonitor
 {
-    static class MonitorConstants
+    internal static class MonitorConstants
     {
         public enum Parameter
         {
