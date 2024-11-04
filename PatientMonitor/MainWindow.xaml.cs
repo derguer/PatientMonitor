@@ -39,7 +39,7 @@ namespace PatientMonitor
         double ampValue;
         bool lastPatient = false;
 
-        MonitorConstants.Parameter parameter = MonitorConstants.Parameter.ECG;
+        MonitorConstants.Parameter parameter; 
 
         public MainWindow()
         {
@@ -81,11 +81,24 @@ namespace PatientMonitor
         {
             double.TryParse(textBoxFrequencyValue.Text, out double parsedFrequency);
             lastFrequency = parsedFrequency;
-            if (lastPatient) { patient.ECGFrequency = lastFrequency; }
+            switch (parameter)
+            {
+                case (MonitorConstants.Parameter.ECG):
+                    if (lastPatient) { patient.ECGFrequency = lastFrequency; }
+                    break;
+                case (MonitorConstants.Parameter.EMG):
+                    if (lastPatient) patient.EMGFrequency = lastFrequency;
+                    break;
+                case (MonitorConstants.Parameter.EEG):
+                    //if (lastPatient) patient.EEGFrequency = lastFrequency; noch nicht die klasse implimentiert 
+                    break;
+            }
+            
         }
 
         private void sliderAmplitudeValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+
             ampValue = sliderAmplitudeValue.Value;
             switch (parameter)
             {
@@ -224,8 +237,30 @@ namespace PatientMonitor
         private void comboBoxParameter_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
-            if (comboBox.IsEnabled) { comboBox.SelectionChanged += comboBoxParameter_SelectionChanged; }
-            else { comboBox.SelectionChanged -= comboBoxParameter_SelectionChanged; }
+            //if (comboBox.IsEnabled) { comboBox.SelectionChanged += comboBoxParameter_SelectionChanged; }
+            //else { comboBox.SelectionChanged -= comboBoxParameter_SelectionChanged; }
+
+            switch (comboBoxParameter.SelectedIndex) {
+
+                case 0: { parameter = MonitorConstants.Parameter.ECG;
+                        MessageBox.Show("ECG Erstellt");
+                    } 
+                    break;
+                case 1:
+                    {
+                        parameter = MonitorConstants.Parameter.EMG;
+                        MessageBox.Show("EMG Erstellt");
+                    }
+                    break;
+                case 2: { parameter = MonitorConstants.Parameter.EEG; } 
+                    break;
+                case 3: { parameter = MonitorConstants.Parameter.Resp; } 
+                    break;
+                //default: parameter = MonitorConstants.Parameter.ECG;
+                    //MessageBox.Show("ECG Erstellt");
+                    //break;
+            }
+
             
         }
 

@@ -43,6 +43,7 @@ namespace PatientMonitor
             double sample = 0.0;
             double stepIndex = 0.0;
             double signalLength = 0.0;
+
             signalLength = (double)(1.0 * HzToBeatsPerMin /frequency);
             stepIndex = (double)(timeIndex % signalLength);
             if (stepIndex > (signalLength / 2.0))
