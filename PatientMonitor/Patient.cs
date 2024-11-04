@@ -10,6 +10,7 @@ namespace PatientMonitor
     {
         ECG ecg;
         EMG emg;
+        EEG eeg;
 
         private string patientName;
         private DateTime dateOfStudy;
@@ -25,12 +26,14 @@ namespace PatientMonitor
             this.patientName = patientName; this.age = age; this.dateOfStudy = dateOfStudy;
             ecg = new ECG(amplitude, frequency, harmonics);
             emg = new EMG(amplitude, frequency, harmonics);
+            eeg = new EEG(amplitude, frequency, harmonics);
         }
         public Patient(string patientName, int age, DateTime dateOfStudy)
         {
             this.patientName = patientName; this.age = age; this.dateOfStudy = dateOfStudy;
             ecg = new ECG();
             emg = new EMG();
+            eeg = new EEG();
         }
 
 
@@ -43,6 +46,10 @@ namespace PatientMonitor
         public double EMGAmplitude { set { emg.Amplitude = value; } get { return emg.Amplitude; } }
         public double EMGFrequency { set { emg.Frequency = value; } get { return emg.Frequency; } }
         public int EMGHarmonics { set { emg.Harmonics = value; } get { return emg.Harmonics; } }
+
+        public double EEGAmplitude { set { eeg.Amplitude = value; } get { return eeg.Amplitude; } }
+        public double EEGFrequency { set { eeg.Frequency = value; } get { return eeg.Frequency; } }
+        public int EEGHarmonics { set { eeg.Harmonics = value; } get { return eeg.Harmonics; } }
 
         public double NextSample(double timeIndex, MonitorConstants.Parameter parameter)
         {

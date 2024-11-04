@@ -39,7 +39,14 @@ namespace PatientMonitor
         double ampValue;
         bool lastPatient = false;
 
-        MonitorConstants.Parameter parameter; 
+        MonitorConstants.Parameter parameter;
+
+        MonitorConstants.Parameter[] allParameter = { 
+            MonitorConstants.Parameter.ECG, 
+            MonitorConstants.Parameter.EMG, 
+            MonitorConstants.Parameter.EEG, 
+            MonitorConstants.Parameter.Resp 
+        };
 
         public MainWindow()
         {
@@ -57,7 +64,7 @@ namespace PatientMonitor
             // Generate a new data point
             
             if (patient != null) dataPoints.Add(new KeyValuePair<int, double>(index++, patient.NextSample(index, parameter)));
-
+            
             // Optional: Remove old points to keep the chart clean
             if (dataPoints.Count > 200) // Maximum number of points
             {
@@ -90,7 +97,7 @@ namespace PatientMonitor
                     if (lastPatient) patient.EMGFrequency = lastFrequency;
                     break;
                 case (MonitorConstants.Parameter.EEG):
-                    //if (lastPatient) patient.EEGFrequency = lastFrequency; noch nicht die klasse implimentiert 
+                    if (lastPatient) patient.EEGFrequency = lastFrequency;
                     break;
             }
             
@@ -103,16 +110,16 @@ namespace PatientMonitor
             switch (parameter)
             {
                 case (MonitorConstants.Parameter.ECG):
-                    if (lastPatient) patient.ECGAmplitude = ampValue;
+                    if (lastPatient) { patient.ECGAmplitude = sliderAmplitudeValue.Value; }
                     break;
                 case (MonitorConstants.Parameter.EMG):
-                    if (lastPatient) patient.EMGAmplitude = ampValue;
+                   if (lastPatient) patient.EMGAmplitude = sliderAmplitudeValue.Value;
                     break;
                 case (MonitorConstants.Parameter.EEG):
-                    //if (lastPatient) patient.EEGAmplitude = ampValue; noch nicht die klasse implimentiert 
+                    if (lastPatient) patient.EEGAmplitude = sliderAmplitudeValue.Value;
                     break;
             }
-            
+
         }
 
         private void datePickerDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -148,7 +155,7 @@ namespace PatientMonitor
             }
             else
             {
-                MessageBox.Show("Fill all boxes!");
+               // MessageBox.Show("Fill all boxes!");
             }
 
         }
@@ -237,29 +244,9 @@ namespace PatientMonitor
         private void comboBoxParameter_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
-            //if (comboBox.IsEnabled) { comboBox.SelectionChanged += comboBoxParameter_SelectionChanged; }
-            //else { comboBox.SelectionChanged -= comboBoxParameter_SelectionChanged; }
+            if (comboBox.IsEnabled) { comboBox.SelectionChanged += comboBoxParameter_SelectionChanged; }
 
-            switch (comboBoxParameter.SelectedIndex) {
-
-                case 0: { parameter = MonitorConstants.Parameter.ECG;
-                        MessageBox.Show("ECG Erstellt");
-                    } 
-                    break;
-                case 1:
-                    {
-                        parameter = MonitorConstants.Parameter.EMG;
-                        MessageBox.Show("EMG Erstellt");
-                    }
-                    break;
-                case 2: { parameter = MonitorConstants.Parameter.EEG; } 
-                    break;
-                case 3: { parameter = MonitorConstants.Parameter.Resp; } 
-                    break;
-                //default: parameter = MonitorConstants.Parameter.ECG;
-                    //MessageBox.Show("ECG Erstellt");
-                    //break;
-            }
+            else { comboBox.SelectionChanged -= comboBoxParameter_SelectionChanged; }
 
             
         }
@@ -267,8 +254,24 @@ namespace PatientMonitor
         private void comboBoxParameter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             parameter = (MonitorConstants.Parameter)comboBoxParameter.SelectedIndex;
+
+            switch (comboBoxParameter.SelectedIndex)
+            {
+
+                case 0:
+                    { parameter = allParameter[0]; if (lastPatient) patient.ECGFrequency = lastFrequency; }
+                    break;
+                case 1:
+                    { parameter = allParameter[1]; if (lastPatient) patient.EMGFrequency = lastFrequency; }
+                    break;
+                case 2:
+                    { parameter = allParameter[2]; if (lastPatient) patient.EEGFrequency = lastFrequency; }
+                    break;
+                case 3:
+                    { parameter = allParameter[3]; }
+                    break;
+            }
+
         }
-
-
     }
 }

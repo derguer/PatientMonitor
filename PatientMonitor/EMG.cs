@@ -38,23 +38,26 @@ namespace PatientMonitor
 
         public double NextSample(double timeIndex)
         {
-            const double HzToBeatsPerMin = 6000.0;
+
 
             double sample = 0.0;
             double stepIndex = 0.0;
-            double signalLength = 0.0;
+            double signalLength = 1.0;
+            timeIndex=timeIndex/6000;
 
-            signalLength = (double)(1.0 * HzToBeatsPerMin /frequency);
+            signalLength = (double)(1.0 /frequency);
             stepIndex = (double)(timeIndex % signalLength);
             if (stepIndex > (signalLength / 2.0))
             {
                 sample = 1;
+                Console.Write("sample=1");
             }
             else
             {
                 sample = -1;
+                Console.Write("sample=-1");
             }
-            sample *= this.Amplitude;
+            sample *= amplitude;
             return (sample);
         }
     }
