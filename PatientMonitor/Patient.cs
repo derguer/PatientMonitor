@@ -11,6 +11,7 @@ namespace PatientMonitor
         ECG ecg;
         EMG emg;
         EEG eeg;
+        Resp resp;
 
         private string patientName;
         private DateTime dateOfStudy;
@@ -27,6 +28,7 @@ namespace PatientMonitor
             ecg = new ECG(amplitude, frequency, harmonics);
             emg = new EMG(amplitude, frequency, harmonics);
             eeg = new EEG(amplitude, frequency, harmonics);
+            resp = new Resp(amplitude, frequency, harmonics);
         }
         public Patient(string patientName, int age, DateTime dateOfStudy)
         {
@@ -34,6 +36,7 @@ namespace PatientMonitor
             ecg = new ECG();
             emg = new EMG();
             eeg = new EEG();
+            resp = new Resp();
         }
 
 
@@ -47,9 +50,16 @@ namespace PatientMonitor
         public double EMGFrequency { set { emg.Frequency = value; } get { return emg.Frequency; } }
         public int EMGHarmonics { set { emg.Harmonics = value; } get { return emg.Harmonics; } }
 
+        //EEG ----
         public double EEGAmplitude { set { eeg.Amplitude = value; } get { return eeg.Amplitude; } }
         public double EEGFrequency { set { eeg.Frequency = value; } get { return eeg.Frequency; } }
         public int EEGHarmonics { set { eeg.Harmonics = value; } get { return eeg.Harmonics; } }
+
+        //Raspi ----
+        public double RespAmplitude { set { resp.Amplitude = value; } get { return resp.Amplitude; } }
+        public double RespFrequency { set { resp.Frequency = value; } get { return resp.Frequency; } }
+        public int RespHarmonics { set { resp.Harmonics = value; } get { return resp.Harmonics; } }
+
 
         public double NextSample(double timeIndex, MonitorConstants.Parameter parameter)
         {
@@ -63,6 +73,12 @@ namespace PatientMonitor
                     break;
                 case MonitorConstants.Parameter.EMG:
                     nextSample = emg.NextSample(timeIndex);
+                    break;
+                case MonitorConstants.Parameter.EEG:
+                        nextSample = eeg.NextSample(timeIndex);
+                    break;
+                case MonitorConstants.Parameter.Resp:
+                    nextSample = resp.NextSample(timeIndex);
                     break;
                 default:
                     break;

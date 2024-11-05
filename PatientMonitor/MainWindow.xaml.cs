@@ -48,6 +48,14 @@ namespace PatientMonitor
             MonitorConstants.Parameter.Resp 
         };
 
+        MonitorConstants.Parameter[] savedParameters = {
+            MonitorConstants.Parameter.ECG,
+            MonitorConstants.Parameter.EMG,
+            MonitorConstants.Parameter.EEG,
+            MonitorConstants.Parameter.Resp
+        };
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -248,7 +256,6 @@ namespace PatientMonitor
 
             else { comboBox.SelectionChanged -= comboBoxParameter_SelectionChanged; }
 
-            
         }
 
         private void comboBoxParameter_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -259,19 +266,36 @@ namespace PatientMonitor
             {
 
                 case 0:
-                    { parameter = allParameter[0]; if (lastPatient) patient.ECGFrequency = lastFrequency; }
+                    { parameter = allParameter[0]; if (lastPatient) patient.ECGFrequency = lastFrequency; patient.ECGAmplitude = ampValue; patient.ECGHarmonics = lastHarmonics; resetParameters(); }
                     break;
                 case 1:
-                    { parameter = allParameter[1]; if (lastPatient) patient.EMGFrequency = lastFrequency; }
+                    { parameter = allParameter[1]; if (lastPatient) patient.EMGFrequency = lastFrequency; patient.EMGAmplitude = ampValue; patient.EMGHarmonics = lastHarmonics; resetParameters(); }
                     break;
                 case 2:
-                    { parameter = allParameter[2]; if (lastPatient) patient.EEGFrequency = lastFrequency; }
+                    { parameter = allParameter[2]; if (lastPatient) patient.EEGFrequency = lastFrequency; patient.EEGAmplitude = ampValue; patient.EEGHarmonics = lastHarmonics; resetParameters(); }
                     break;
                 case 3:
-                    { parameter = allParameter[3]; }
+                    { parameter = allParameter[3]; if (lastPatient) patient.RespFrequency = lastFrequency; patient.RespAmplitude = ampValue; patient.RespHarmonics = lastHarmonics; resetParameters(); }
                     break;
             }
 
+            allParameter = savedParameters;
+
         }
+
+        private void resetParameters()
+        {
+            // Setze die Frequenz, Amplitude und Harmonischen auf Standardwerte zurück
+            lastFrequency = 0.0;
+            ampValue = 0.0;
+            lastHarmonics = 0;
+
+            // Aktualisiere die Anzeigeelemente
+            textBoxFrequencyValue.Text = "0";
+            sliderAmplitudeValue.Value = 0;
+            comboBoxHarmonics.SelectedIndex = 0;
+
+        }
+
     }
 }

@@ -38,7 +38,6 @@ namespace PatientMonitor
 
         public double NextSample(double timeIndex)
         {
-
             timeIndex = timeIndex / 6000;
 
             // Beispielhafte Frequenzen für verschiedene EEG-Bänder
@@ -55,8 +54,11 @@ namespace PatientMonitor
                             Math.Sin(2 * Math.PI * betaFrequency * timeIndex) +
                             Math.Sin(2 * Math.PI * gammaFrequency * timeIndex);
 
+            // Sägezahnfunktion
+            double sawtooth = 2 * (timeIndex - Math.Floor(timeIndex + 0.5));
+
             sample *= amplitude;
-            return sample;
+            return sample + sawtooth;
         }
     }
 }
