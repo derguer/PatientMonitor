@@ -9,8 +9,8 @@ namespace PatientMonitor
     class ECG
     {
         
-        private double amplitude = 1.0;
-        private double frequency = 5.0;
+        private double amplitude = 0.0;
+        private double frequency = 0.0;
         private int harmonics = 1;
 
 

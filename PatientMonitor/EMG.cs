@@ -10,8 +10,8 @@ namespace PatientMonitor
     {
         //Parameters
         const double HzToBeatsPerMin = 60.0;
-        private double amplitude = 1.0;
-        private double frequency = 5;
+        private double amplitude = 0.0;
+        private double frequency = 0.0;
         private int harmonics = 1;
         public double Amplitude
         {

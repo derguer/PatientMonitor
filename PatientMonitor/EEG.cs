@@ -10,9 +10,10 @@ namespace PatientMonitor
     {
         //Parameters
         const double HzToBeatsPerMin = 60.0;
-        private double amplitude = 1.0;
-        private double frequency = 5;
+        private double amplitude = 0.0;
+        private double frequency = 0.0;
         private int harmonics = 1;
+
         public double Amplitude
         {
             set { amplitude = value; }
@@ -40,25 +41,26 @@ namespace PatientMonitor
         {
             timeIndex = timeIndex / 6000;
 
-            // Beispielhafte Frequenzen für verschiedene EEG-Bänder
-            double deltaFrequency = 1.0; // 0.5 - 4 Hz
-            double thetaFrequency = 6.0; // 4 - 8 Hz
-            double alphaFrequency = 10.0; // 8 - 12 Hz
-            double betaFrequency = 20.0; // 12 - 30 Hz
-            double gammaFrequency = 40.0; // 30 - 100 Hz
+            double sample = 0.0;
+            double signalLength = 1.0 / frequency;
+            double halfSignalLength = signalLength / 2;
+            double stepIndex = timeIndex % signalLength;
 
-            // Erzeugung des EEG-Signals durch Addition der verschiedenen Frequenzkomponenten
-            double sample = Math.Sin(2 * Math.PI * deltaFrequency * timeIndex) +
-                            Math.Sin(2 * Math.PI * thetaFrequency * timeIndex) +
-                            Math.Sin(2 * Math.PI * alphaFrequency * timeIndex) +
-                            Math.Sin(2 * Math.PI * betaFrequency * timeIndex) +
-                            Math.Sin(2 * Math.PI * gammaFrequency * timeIndex);
+            // Konstanten für die exponentielle Funktion
+            double alpha = 5.0; // Steilheit der exponentiellen Kurve, anpassbar
 
-            // Sägezahnfunktion
-            double sawtooth = 2 * (timeIndex - Math.Floor(timeIndex + 0.5));
+            if (stepIndex <= halfSignalLength)
+            {
+                // Exponentieller Anstieg von -Amplitude bis +Amplitude in der ersten Hälfte der Periode
+                sample = -this.Amplitude + (2 * this.Amplitude * (1 - Math.Exp(-alpha * (stepIndex / halfSignalLength))));
+            }
+            else
+            {
+                // Exponentieller Abfall von +Amplitude bis -Amplitude in der zweiten Hälfte der Periode
+                sample = this.Amplitude - (2 * this.Amplitude * (1 - Math.Exp(-alpha * ((stepIndex - halfSignalLength) / halfSignalLength))));
+            }
 
-            sample *= amplitude;
-            return sample + sawtooth;
+            return sample;
         }
     }
 }
