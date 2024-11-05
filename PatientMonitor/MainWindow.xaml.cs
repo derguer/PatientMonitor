@@ -278,9 +278,9 @@ namespace PatientMonitor
                                        comboBoxHarmonics.SelectedIndex = patient.ECGHarmonics; 
                                        comboBoxHarmonics.IsEnabled = true;
                                        
-                                       timer.Stop(); timer.Start();
+                                       //timer.Stop(); timer.Start();
 
-                        //resetParameters();
+                                      //resetParameters();
                     }
                     break;
                 case MonitorConstants.Parameter.EMG:
@@ -289,8 +289,8 @@ namespace PatientMonitor
                                          sliderAmplitudeValue.Value = patient.EMGAmplitude;
                                          //comboBoxHarmonics.SelectedIndex = 0;
                                          comboBoxHarmonics.IsEnabled = false;
-                                         timer.Stop(); timer.Start();
-                        //resetParameters();
+                                         //timer.Stop(); timer.Start();
+                                         //resetParameters();
                     }
                     break;
                 case MonitorConstants.Parameter.EEG:
@@ -299,7 +299,7 @@ namespace PatientMonitor
                                          sliderAmplitudeValue.Value = patient.EEGAmplitude;
                                          //comboBoxHarmonics.SelectedIndex = 0;
                                          comboBoxHarmonics.IsEnabled = false;
-                                         timer.Stop(); timer.Start();
+                                         //timer.Stop(); timer.Start();
                        
                     }
                     break;
@@ -309,7 +309,7 @@ namespace PatientMonitor
                                          sliderAmplitudeValue.Value = patient.RespAmplitude;
                                          //comboBoxHarmonics.SelectedIndex = 0;
                                          comboBoxHarmonics.IsEnabled = false;
-                                         timer.Stop(); timer.Start();
+                                         //timer.Stop(); timer.Start();
                     }
                     break;
             }
