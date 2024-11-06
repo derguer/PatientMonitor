@@ -31,7 +31,7 @@ namespace PatientMonitor
             emg = new  EMG(amplitude, frequency, harmonics);
             eeg = new  EEG(amplitude, frequency, harmonics);
             resp = new Resp(amplitude, frequency, harmonics);
-            mRImages = new MRImages(); mRImages.loadImages("Z:/Softwaretechnik/Labore/PatientMonitor/t200014 - 132705237.jpg");
+            mRImages = new MRImages(); mRImages.loadImages("Z:/Softwaretechnik/Labore/PatientMonitor/MRT_Bilder/CT+MR+contrast+montage-1574688855.jpg");
         }
         public Patient(string patientName, int age, DateTime dateOfStudy)
         {

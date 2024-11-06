@@ -70,7 +70,7 @@
                     <ColumnDefinition Width="39*"/>
                     <ColumnDefinition Width="23*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="buttonLoadImage" Content="loeadImage" HorizontalAlignment="Left" Margin="150,20,0,0" VerticalAlignment="Top" Width="100" FontSize="16" Click="buttonLoadImage_Click"/>
+                <Button x:Name="buttonLoadImage" Content="loeadImage" HorizontalAlignment="Left" Margin="150,20,0,0" VerticalAlignment="Top" Width="100" FontSize="16" Click="buttonLoadImage_Click" IsEnabled="False"/>
                 <Button x:Name="buttonPrev" Content="prev" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Width="74" FontSize="16" IsEnabled="False"/>
                 <Button x:Name="buttonNext" Content="next" HorizontalAlignment="Left" Margin="300,20,0,0" VerticalAlignment="Top" Width="74" FontSize="16" IsEnabled="False" Click="buttonNext_Click"/>
                 <Image x:Name="MyImage" Margin="10,-632,20,114" Grid.ColumnSpan="2" />
