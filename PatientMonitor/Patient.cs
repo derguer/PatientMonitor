@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace PatientMonitor
 {
@@ -12,6 +13,7 @@ namespace PatientMonitor
         EMG emg;
         EEG eeg;
         Resp resp;
+        MRImages mRImages;
 
         private string patientName;
         private DateTime dateOfStudy;
@@ -25,17 +27,18 @@ namespace PatientMonitor
         public Patient(string patientName, int age, DateTime dateOfStudy, double amplitude, double frequency, int harmonics)
         {
             this.patientName = patientName; this.age = age; this.dateOfStudy = dateOfStudy;
-            ecg = new ECG(amplitude, frequency, harmonics);
-            emg = new EMG(amplitude, frequency, harmonics);
-            eeg = new EEG(amplitude, frequency, harmonics);
+            ecg = new  ECG(amplitude, frequency, harmonics);
+            emg = new  EMG(amplitude, frequency, harmonics);
+            eeg = new  EEG(amplitude, frequency, harmonics);
             resp = new Resp(amplitude, frequency, harmonics);
+            mRImages = new MRImages(); mRImages.loadImages("Z:/Softwaretechnik/Labore/PatientMonitor/t200014 - 132705237.jpg");
         }
         public Patient(string patientName, int age, DateTime dateOfStudy)
         {
             this.patientName = patientName; this.age = age; this.dateOfStudy = dateOfStudy;
-            ecg = new ECG();
-            emg = new EMG();
-            eeg = new EEG();
+            ecg  = new ECG();
+            emg  = new EMG();
+            eeg  = new EEG();
             resp = new Resp();
         }
 

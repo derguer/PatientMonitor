@@ -6,43 +6,18 @@ using System.Threading.Tasks;
 
 namespace PatientMonitor
 {
-    class EEG
+    class EEG : PhysioParameter
     {
-        //Parameters
-        const double HzToBeatsPerMin = 60.0;
-        private double amplitude = 0.0;
-        private double frequency = 0.0;
-        private int harmonics = 1;
 
-        public double Amplitude
-        {
-            set { amplitude = value; }
-            get { return amplitude; }
-        }
-        public double Frequency
-        {
-            set { frequency = value; }
-            get { return frequency; }
-        }
-        public int Harmonics
-        {
-            set { harmonics = value; }
-            get { return harmonics; }
-        }
-        public EEG(double amplitude, double frequency, int harmonics)
-        {
-            this.amplitude = amplitude;
-            this.frequency = frequency;
-            this.harmonics = harmonics;
-        }
-        public EEG() { }
+        public EEG() : base() { }
+        public EEG(double amplitude, double frequency, int harmonics) : base(amplitude, frequency, harmonics) { }
 
         public double NextSample(double timeIndex)
         {
             timeIndex = timeIndex / 6000;
 
             double sample = 0.0;
-            double signalLength = 1.0 / frequency;
+            double signalLength = 1.0 / Frequency;
             double halfSignalLength = signalLength / 2;
             double stepIndex = timeIndex % signalLength;
 

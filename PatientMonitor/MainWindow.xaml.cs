@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Microsoft.Win32;
 
 
 namespace PatientMonitor
@@ -54,7 +55,6 @@ namespace PatientMonitor
             MonitorConstants.Parameter.EEG,
             MonitorConstants.Parameter.Resp
         };
-
 
         public MainWindow()
         {
@@ -187,6 +187,11 @@ namespace PatientMonitor
             textBoxFrequencyValue.IsEnabled = true;
             comboBoxHarmonics.IsEnabled = true;
             comboBoxParameter.IsEnabled = true;
+
+            //Image Buttons
+            buttonPrev.IsEnabled = false;
+            buttonNext.IsEnabled = false;
+            buttonLoadImage.IsEnabled = true;
         }
 
         private void textBoxPatientAge_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -340,6 +345,33 @@ namespace PatientMonitor
             {
                 lastlastHarmonics = patient.ECGHarmonics;
             }
+        }
+
+        private void buttonLoadImage_Click(object sender, RoutedEventArgs e)
+        {
+            // Create an OpenFileDialog
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image files (*.bmp;*.jpg;*.png)|*.bmp;*.jpg;*.png|All files (*.*)|*.*";
+
+            // Show the dialog and check if the result is OK
+            if (openFileDialog.ShowDialog() == true)
+            {
+                // Create a new BitmapImage
+                BitmapImage bitmap = new BitmapImage();
+                // Set the UriSource to load the image from the file
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(openFileDialog.FileName, UriKind.Absolute);
+                bitmap.CacheOption = BitmapCacheOption.OnLoad; // Cache option to ensure the file can be accessed immediately
+                bitmap.EndInit();
+
+                // Set the ImageSource of the Image
+                MyImage.Source = bitmap; // Verwende "MyImage" anstelle von "MyImageBrush"
+            }
+        }
+
+        private void buttonNext_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void comboBoxHarmonics_deaktivation(bool ein_oderAus)

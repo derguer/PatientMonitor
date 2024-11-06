@@ -6,46 +6,20 @@ using System.Threading.Tasks;
 
 namespace PatientMonitor
 {
-    class EMG
+    class EMG : PhysioParameter
     {
-        //Parameters
-        const double HzToBeatsPerMin = 60.0;
-        private double amplitude = 0.0;
-        private double frequency = 0.0;
-        private int harmonics = 1;
-        public double Amplitude
-        {
-            set { amplitude = value; }
-            get { return amplitude; }
-        }
-        public double Frequency
-        {
-            set { frequency = value; }
-            get { return frequency; }
-        }
-        public int Harmonics
-        {
-            set { harmonics = value; }
-            get { return harmonics; }
-        }
-        public EMG(double amplitude, double frequency, int harmonics)
-        {
-            this.amplitude = amplitude;
-            this.frequency = frequency;
-            this.harmonics = harmonics;
-        }
-        public EMG() { }
+        public EMG() : base() { }
+        public EMG(double amplitude, double frequency, int harmonics) : base(amplitude, frequency, harmonics) { }
 
         public double NextSample(double timeIndex)
         {
-
-
-            double sample = 0.0;
-            double stepIndex = 0.0;
+            double sample       = 0.0;
+            double stepIndex    = 0.0;
             double signalLength = 1.0;
+
             timeIndex=timeIndex/6000;
 
-            signalLength = (double)(1.0 /frequency);
+            signalLength = (double)(1.0 /Frequency);
             stepIndex = (double)(timeIndex % signalLength);
             if (stepIndex > (signalLength / 2.0))
             {
@@ -57,7 +31,7 @@ namespace PatientMonitor
                 sample = -1;
                 Console.Write("sample=-1");
             }
-            sample *= amplitude;
+            sample *= Amplitude;
             return (sample);
         }
     }
