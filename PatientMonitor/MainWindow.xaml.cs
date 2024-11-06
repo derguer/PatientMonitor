@@ -35,7 +35,7 @@ namespace PatientMonitor
         int lastPatientAge;
         DateTime dateTime;
         double lastFrequency;
-        int lastHarmonics;
+        int lastHarmonics, lastlastHarmonics;
         double ampValue;
         bool lastPatient = false;
 
@@ -121,7 +121,8 @@ namespace PatientMonitor
             switch (parameter)
             {
                 case (MonitorConstants.Parameter.ECG):
-                    if (lastPatient) { patient.ECGAmplitude = sliderAmplitudeValue.Value; }
+                    if (lastPatient) { patient.ECGAmplitude = sliderAmplitudeValue.Value;
+                    }
                     break;
                 case (MonitorConstants.Parameter.EMG):
                    if (lastPatient) patient.EMGAmplitude = sliderAmplitudeValue.Value;
@@ -237,13 +238,14 @@ namespace PatientMonitor
 
         private void buttonUpdatePatient_Click(object sender, RoutedEventArgs e)
         {
-
+            resetParameters();
         }
 
         private void ComboBoxHarmonics_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             lastHarmonics = comboBoxHarmonics.SelectedIndex;
-            if (lastPatient) patient.ECGHarmonics = lastHarmonics;
+            if (lastPatient) { patient.ECGHarmonics = lastHarmonics; UpdateHarmonics(); }
+            
 
         }
 
@@ -274,42 +276,39 @@ namespace PatientMonitor
                 case MonitorConstants.Parameter.ECG:
                     {
                         if (lastPatient) textBoxFrequencyValue.Text = patient.ECGFrequency.ToString();
-                                       sliderAmplitudeValue.Value = patient.ECGAmplitude; 
-                                       comboBoxHarmonics.SelectedIndex = patient.ECGHarmonics; 
-                                       comboBoxHarmonics.IsEnabled = true;
-                                       
-                                       //timer.Stop(); timer.Start();
+                                         sliderAmplitudeValue.Value = patient.ECGAmplitude; 
 
-                                      //resetParameters();
+                                         comboBoxHarmonics.SelectedIndex = lastlastHarmonics; 
+                                         comboBoxHarmonics.Visibility = Visibility.Visible;
+                                         comboBoxHarmonics.IsEnabled = true;
                     }
                     break;
                 case MonitorConstants.Parameter.EMG:
                     {
                         if (lastPatient) textBoxFrequencyValue.Text = patient.EMGFrequency.ToString();
                                          sliderAmplitudeValue.Value = patient.EMGAmplitude;
-                                         //comboBoxHarmonics.SelectedIndex = 0;
                                          comboBoxHarmonics.IsEnabled = false;
-                                         //timer.Stop(); timer.Start();
-                                         //resetParameters();
+                                         comboBoxHarmonics.Visibility = Visibility.Collapsed;
+
                     }
                     break;
                 case MonitorConstants.Parameter.EEG:
                     {
                         if (lastPatient) textBoxFrequencyValue.Text = patient.EEGFrequency.ToString();
-                                         sliderAmplitudeValue.Value = patient.EEGAmplitude;
-                                         //comboBoxHarmonics.SelectedIndex = 0;
+                                         sliderAmplitudeValue.Value = patient.EEGAmplitude; 
                                          comboBoxHarmonics.IsEnabled = false;
-                                         //timer.Stop(); timer.Start();
-                       
+                                         comboBoxHarmonics.Visibility = Visibility.Collapsed; 
+
                     }
                     break;
                 case MonitorConstants.Parameter.Resp:
                     {
                         if (lastPatient) textBoxFrequencyValue.Text = patient.RespFrequency.ToString();
                                          sliderAmplitudeValue.Value = patient.RespAmplitude;
-                                         //comboBoxHarmonics.SelectedIndex = 0;
                                          comboBoxHarmonics.IsEnabled = false;
-                                         //timer.Stop(); timer.Start();
+                                         comboBoxHarmonics.Visibility = Visibility.Collapsed; 
+
+
                     }
                     break;
             }
@@ -339,6 +338,13 @@ namespace PatientMonitor
 
             else { comboBox.SelectionChanged -= comboBoxParameter_SelectionChanged; }
 
+        }
+        private void UpdateHarmonics()
+        {
+            if (parameter == MonitorConstants.Parameter.ECG)
+            {
+                lastlastHarmonics = patient.ECGHarmonics;
+            }
         }
     }
 }
