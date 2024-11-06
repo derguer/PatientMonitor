@@ -164,7 +164,8 @@ namespace PatientMonitor
                 
                 lastPatient = true;
                 buttonUpdatePatient.IsEnabled = true;
-                
+                buttonParameter.IsEnabled = true;
+
                 MessageBox.Show("Patient was created!");
                 //buttonStartSimulation.IsEnabled = true;
             }
@@ -328,6 +329,12 @@ namespace PatientMonitor
             textBoxFrequencyValue.Text = "0";
             sliderAmplitudeValue.Value = 0;
             comboBoxHarmonics.SelectedIndex = 0;
+            textBlockPatientAge.Text = "Enter age here";
+            textBlockPatientName.Text = "Enter name here";
+            //datePickerDate.SelectedDate = null;
+
+            MyImage.Source = null;
+            timer.Stop();
 
         }
 
@@ -366,6 +373,7 @@ namespace PatientMonitor
 
                 // Set the ImageSource of the Image
                 MyImage.Source = bitmap; // Verwende "MyImage" anstelle von "MyImageBrush"
+                timer.Stop();
             }
         }
 

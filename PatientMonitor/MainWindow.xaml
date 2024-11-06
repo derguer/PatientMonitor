@@ -49,7 +49,7 @@
                 <TextBox x:Name="textBoxPatientAge" HorizontalAlignment="Left" Height="23" Margin="10,95,0,0" TextWrapping="Wrap" Text="Enter age here" VerticalAlignment="Top" Width="153" GotFocus="textBoxPatientName_GotFocus" LostFocus="textBoxPatientAge_LostFocus" PreviewTextInput="textBoxPatientAge_PreviewTextInput" TextChanged="textBoxPatientAge_TextChanged"/>
             </Grid>
         </GroupBox>
-        <Button x:Name="buttonParameter" Content="Start Parameters" HorizontalAlignment="Left" Margin="514,680,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonParameter_Click" Height="25" Width="119"/>
+        <Button x:Name="buttonParameter" Content="Start Parameters" HorizontalAlignment="Left" Margin="514,680,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonParameter_Click" Height="25" Width="119" IsEnabled="False"/>
         <Button x:Name="buttonQuit" Content="Stop" HorizontalAlignment="Left" Margin="716,680,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonQuit_Click" Height="25" Width="36"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="16" Width="49"/>
         <ComboBox x:Name="comboBoxHarmonics" HorizontalAlignment="Left" Margin="682,610,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="ComboBoxHarmonics_SelectionChanged" SelectedIndex="0" IsEnabled="False" RenderTransformOrigin="0.517,0.182" IsEnabledChanged="comboBoxHarmonics_IsEnabledChanged" Height="22" >
