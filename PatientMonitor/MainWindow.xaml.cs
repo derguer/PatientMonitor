@@ -259,8 +259,8 @@ namespace PatientMonitor
                 
                 patient.ECGHarmonics = lastHarmonics; 
                 UpdateHarmonics();
-                patient.ECGLowAlarm = lastLowAlarmFrequency;
-                patient.ECGHighAlarm = lastHighAlarmFrequency;
+                //patient.ECGLowAlarm = lastLowAlarmFrequency;
+                //patient.ECGHighAlarm = lastHighAlarmFrequency;
             
             }
         }
