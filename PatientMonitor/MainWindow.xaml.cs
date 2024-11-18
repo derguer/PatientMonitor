@@ -35,7 +35,7 @@ namespace PatientMonitor
         string lastPatientName = "";
         int lastPatientAge;
         DateTime dateTime;
-        double lastFrequency;
+        double lastFrequency, lastHighAlarmFrequency, lastLowAlarmFrequency;
         int lastHarmonics, lastlastHarmonics;
         double ampValue;
         bool lastPatient = false;
@@ -96,6 +96,7 @@ namespace PatientMonitor
         {
             double.TryParse(textBoxFrequencyValue.Text, out double parsedFrequency);
             lastFrequency = parsedFrequency;
+
             switch (parameter)
             {
                 case (MonitorConstants.Parameter.ECG):
@@ -148,8 +149,7 @@ namespace PatientMonitor
 
             bool isAgeValid = int.TryParse(textBoxPatientAge.Text, out int patientAge);
 
-            bool isNameValid = textBoxPatientName.Text != "Enter name here" &&
-            !string.IsNullOrWhiteSpace(textBoxPatientName.Text);
+            bool isNameValid = textBoxPatientName.Text != "Enter name here" && !string.IsNullOrWhiteSpace(textBoxPatientName.Text);
 
             bool isDateSelected = datePickerDate.SelectedDate.HasValue;
 
@@ -193,6 +193,11 @@ namespace PatientMonitor
             buttonPrev.IsEnabled = false;
             buttonNext.IsEnabled = false;
             buttonLoadImage.IsEnabled = true;
+
+            //Alarm
+            textBoxHightAlarm.IsEnabled = true;
+            textBoxLowAlarm.IsEnabled = true;
+
         }
 
         private void textBoxPatientAge_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -250,9 +255,14 @@ namespace PatientMonitor
         private void ComboBoxHarmonics_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             lastHarmonics = comboBoxHarmonics.SelectedIndex;
-            if (lastPatient) { patient.ECGHarmonics = lastHarmonics; UpdateHarmonics(); }
+            if (lastPatient) { 
+                
+                patient.ECGHarmonics = lastHarmonics; 
+                UpdateHarmonics();
+                patient.ECGLowAlarm = lastLowAlarmFrequency;
+                patient.ECGHighAlarm = lastHighAlarmFrequency;
             
-
+            }
         }
 
         private void textBoxPatientAge_LostFocus(object sender, RoutedEventArgs e)
@@ -284,6 +294,10 @@ namespace PatientMonitor
                         if (lastPatient) textBoxFrequencyValue.Text = patient.ECGFrequency.ToString();
                                          sliderAmplitudeValue.Value = patient.ECGAmplitude;
                                          comboBoxHarmonics_deaktivation(true);
+                                         textBoxHightAlarm.Text = patient.ECGHighAlarm.ToString();
+                                         textBoxLowAlarm.Text = patient.ECGLowAlarm.ToString();
+                                         textBlockAlarm.Text = patient.ECGHighAlarmString;
+                                         textBlockAlarm.Text = patient.ECGLowAlarmString;
 
                     }
                     break;
@@ -292,6 +306,12 @@ namespace PatientMonitor
                         if (lastPatient) textBoxFrequencyValue.Text = patient.EMGFrequency.ToString();
                                          sliderAmplitudeValue.Value = patient.EMGAmplitude;
                                          comboBoxHarmonics_deaktivation(false);
+                                         textBoxHightAlarm.Text = patient.EMGHighAlarm.ToString();
+                                         textBoxLowAlarm.Text = patient.EMGLowAlarm.ToString();
+                                         textBlockAlarm.Text = patient.EMGHighAlarmString;
+                                         textBlockAlarm.Text = patient.EMGLowAlarmString;
+
+
 
                     }
                     break;
@@ -300,6 +320,10 @@ namespace PatientMonitor
                         if (lastPatient) textBoxFrequencyValue.Text = patient.EEGFrequency.ToString();
                                          sliderAmplitudeValue.Value = patient.EEGAmplitude;
                                          comboBoxHarmonics_deaktivation(false);
+                                         textBoxHightAlarm.Text = patient.EEGHighAlarm.ToString();
+                                         textBoxLowAlarm.Text = patient.EEGLowAlarm.ToString();
+                                         textBlockAlarm.Text = patient.EEGHighAlarmString;
+                                         textBlockAlarm.Text = patient.EEGLowAlarmString;
 
                     }
                     break;
@@ -308,6 +332,10 @@ namespace PatientMonitor
                         if (lastPatient) textBoxFrequencyValue.Text = patient.RespFrequency.ToString();
                                          sliderAmplitudeValue.Value = patient.RespAmplitude;
                                          comboBoxHarmonics_deaktivation(false);
+                                         textBoxHightAlarm.Text = patient.RespHighAlarm.ToString();
+                                         textBoxLowAlarm.Text = patient.RespLowAlarm.ToString();
+                                         textBlockAlarm.Text = patient.RespiHighAlarmString;
+                                         textBlockAlarm.Text = patient.RespiLowAlarmString;
 
 
                     }
@@ -377,9 +405,148 @@ namespace PatientMonitor
             }
         }
 
+        private void textBoxLowAlarm_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            double.TryParse(textBoxLowAlarm.Text, out double parsedFrequency);
+            lastLowAlarmFrequency = parsedFrequency;
+
+            switch (parameter)
+            {
+                case (MonitorConstants.Parameter.ECG):
+                    if (lastPatient) { 
+                        patient.ECGLowAlarm = lastLowAlarmFrequency;
+                        //textBoxHightAlarm.Text = patient.ECGHighAlarm.ToString();
+                        //textBoxLowAlarm.Text = patient.ECGLowAlarm.ToString();
+                        textBlockAlarm.Text = patient.ECGHighAlarmString;
+                        textBlockAlarm.Text = patient.ECGLowAlarmString;
+                    }
+                    break;
+                case (MonitorConstants.Parameter.EMG):
+                    if (lastPatient) { 
+                        patient.EMGLowAlarm = lastLowAlarmFrequency;
+                        //textBoxHightAlarm.Text = patient.EMGHighAlarm.ToString();
+                        //textBoxLowAlarm.Text = patient.EMGLowAlarm.ToString();
+                        textBlockAlarm.Text = patient.EMGHighAlarmString;
+                        textBlockAlarm.Text = patient.EMGLowAlarmString;
+
+                    }
+                    break;
+                case (MonitorConstants.Parameter.EEG):
+                    if (lastPatient) { 
+                        patient.EEGLowAlarm = lastLowAlarmFrequency;
+                        //textBoxHightAlarm.Text = patient.EEGHighAlarm.ToString();
+                        //textBoxLowAlarm.Text = patient.EEGLowAlarm.ToString();
+                        textBlockAlarm.Text = patient.EEGHighAlarmString;
+                        textBlockAlarm.Text = patient.EEGLowAlarmString;
+                    }
+                    break;
+                case (MonitorConstants.Parameter.Resp):
+                    if (lastPatient) { 
+                        patient.RespLowAlarm = lastLowAlarmFrequency;
+                        //textBoxHightAlarm.Text = patient.RespHighAlarm.ToString();
+                        //textBoxLowAlarm.Text = patient.RespLowAlarm.ToString();
+                        textBlockAlarm.Text = patient.RespiHighAlarmString;
+                        textBlockAlarm.Text = patient.RespiLowAlarmString;
+                    }
+                    break;
+            }
+        }
+
         private void buttonNext_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void textBoxHighAlarm_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            double.TryParse(textBoxHightAlarm.Text, out double parsedFrequency);
+            lastHighAlarmFrequency = parsedFrequency;
+
+            switch (parameter)
+            {
+                case (MonitorConstants.Parameter.ECG):
+                    if (lastPatient)
+                    {
+                        patient.ECGHighAlarm = lastHighAlarmFrequency;
+                        //textBoxHightAlarm.Text = patient.ECGHighAlarm.ToString();
+                        //textBoxLowAlarm.Text = patient.ECGLowAlarm.ToString();
+                        textBlockAlarm.Text = patient.ECGHighAlarmString;
+                        textBlockAlarm.Text = patient.ECGLowAlarmString;
+                    }
+                    break;
+                case (MonitorConstants.Parameter.EMG):
+                    if (lastPatient)
+                    {
+                        patient.EMGHighAlarm = lastHighAlarmFrequency;
+                        //textBoxHightAlarm.Text = patient.EMGHighAlarm.ToString();
+                        //textBoxLowAlarm.Text = patient.EMGLowAlarm.ToString();
+                        textBlockAlarm.Text = patient.EMGHighAlarmString;
+                        textBlockAlarm.Text = patient.EMGLowAlarmString;
+
+                    }
+                    break;
+                case (MonitorConstants.Parameter.EEG):
+                    if (lastPatient)
+                    {
+                        patient.EEGHighAlarm = lastHighAlarmFrequency;
+                        //textBoxHightAlarm.Text = patient.EEGHighAlarm.ToString();
+                        //textBoxLowAlarm.Text = patient.EEGLowAlarm.ToString();
+                        textBlockAlarm.Text = patient.EEGHighAlarmString;
+                        textBlockAlarm.Text = patient.EEGLowAlarmString;
+                    }
+                    break;
+                case (MonitorConstants.Parameter.Resp):
+                    if (lastPatient)
+                    {
+                        patient.RespHighAlarm = lastHighAlarmFrequency;
+                        //textBoxHightAlarm.Text = patient.RespHighAlarm.ToString();
+                        //textBoxLowAlarm.Text = patient.RespLowAlarm.ToString();
+                        textBlockAlarm.Text = patient.RespiHighAlarmString;
+                        textBlockAlarm.Text = patient.RespiLowAlarmString;
+                    }
+                    break;
+            }
+        }
+
+        private void textBoxHightAlarm_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !int.TryParse(e.Text, out _);
+        }
+        private void textBoxLowAlarm_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !int.TryParse(e.Text, out _);
+        }
+        private void textBoxHighAlarm_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                textBox.Clear();
+                textBox.Foreground = Brushes.Black;
+            }
+        }
+        private void textBoxLowAlarm_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                textBox.Clear();
+                textBox.Foreground = Brushes.Black;
+            }
+        }
+        private void textBoxHighAlarm_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox && string.IsNullOrEmpty(textBox.Text))
+            {
+                textBox.Text = "Enter High Alarm frequency here";
+                textBox.Foreground = Brushes.Red;
+            }
+        }
+        private void textBoxLowAlarm_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox && string.IsNullOrEmpty(textBox.Text))
+            {
+                textBox.Text = "Enter Low Alarm frequency here";
+                textBox.Foreground = Brushes.Red;
+            }
         }
 
         private void comboBoxHarmonics_deaktivation(bool ein_oderAus)

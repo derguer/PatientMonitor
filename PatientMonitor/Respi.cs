@@ -28,5 +28,18 @@ namespace PatientMonitor
 
             return sample;
         }
+        public new string LowAlarmString => base.LowAlarmString;
+        public new string HighAlarmString => base.HighAlarmString;
+
+        public new double LowAlarm
+        {
+            get => base.LowAlarm;
+            set => base.LowAlarm = value;
+        }
+        public new double HighAlarm
+        {
+            get => base.HighAlarm;
+            set => base.HighAlarm = value;
+        }
     }
 }

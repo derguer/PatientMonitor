@@ -11,6 +11,8 @@ namespace PatientMonitor
         public ECG() : base() { }
         public ECG(double amplitude, double frequency, int harmonics) : base(amplitude, frequency, harmonics) { }
 
+        
+
         public double NextSample(double timeIndex)
         {
             const double HzToBeatsPerMin = 6000.0;
@@ -42,6 +44,20 @@ namespace PatientMonitor
                 sample *= Amplitude;
                 return (sample);
             }
+        }
+
+        public new string LowAlarmString => base.LowAlarmString;
+        public new string HighAlarmString => base.HighAlarmString;
+
+        public new double LowAlarm
+        {
+            get => base.LowAlarm;
+            set => base.LowAlarm = value;
+        }
+        public new double HighAlarm
+        {
+            get => base.HighAlarm;
+            set => base.HighAlarm = value;
         }
     }
 }

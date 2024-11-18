@@ -29,6 +29,28 @@ namespace PatientMonitor
             this.frequency = frequency;
             this.harmonics = harmonics;
         }
+        public string LowAlarmString
+        {
+            get { return lowAlarmString; }
+        }
+        public string HighAlarmString
+        {
+            get { return highAlarmString; }
+        }
+        public double LowAlarm { get { return lowAlarm; } set { 
+                lowAlarm = value;
+                displayLowAlarm(frequency, lowAlarm);
+                displayHighAlarm(frequency, highAlarm);
+            }
+        }
+        public double HighAlarm
+        {
+            get {  return highAlarm; } set {
+                highAlarm = value;
+                displayLowAlarm(frequency, lowAlarm);
+                displayHighAlarm(frequency, highAlarm);
+            }
+        }
 
         public PhysioParameter() {}
         public void displayHighAlarm(double frequency, double alarmHigh)

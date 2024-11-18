@@ -47,21 +47,41 @@ namespace PatientMonitor
         public double ECGAmplitude { set {ecg.Amplitude=value; } get { return ecg.Amplitude; } }
         public double ECGFrequency { set {ecg.Frequency=value; } get { return ecg.Frequency; } }
         public int ECGHarmonics { set {ecg.Harmonics=value; } get { return ecg.Harmonics; } }
+        public double ECGHighAlarm { get { return ecg.HighAlarm; } set { ecg.HighAlarm = value; } }
+        public double ECGLowAlarm { get { return ecg.LowAlarm; } set { ecg.LowAlarm = value; } }
+        public string ECGLowAlarmString { get { return ecg.LowAlarmString; } }
+        public string ECGHighAlarmString { get { return ecg.HighAlarmString; } }
+
 
         //EMG ----
         public double EMGAmplitude { set { emg.Amplitude = value; } get { return emg.Amplitude; } }
         public double EMGFrequency { set { emg.Frequency = value; } get { return emg.Frequency; } }
         public int EMGHarmonics { set { emg.Harmonics = value; } get { return emg.Harmonics; } }
+        public double EMGHighAlarm { get { return emg.HighAlarm; } set { emg.HighAlarm = value; } }
+        public double EMGLowAlarm { get { return emg.LowAlarm; } set { emg.LowAlarm = value; } }
+        public string EMGLowAlarmString { get { return emg.LowAlarmString; }}
+        public string EMGHighAlarmString { get { return emg.HighAlarmString; } }
+
 
         //EEG ----
         public double EEGAmplitude { set { eeg.Amplitude = value; } get { return eeg.Amplitude; } }
         public double EEGFrequency { set { eeg.Frequency = value; } get { return eeg.Frequency; } }
         public int EEGHarmonics { set { eeg.Harmonics = value; } get { return eeg.Harmonics; } }
+        public double EEGHighAlarm { get { return eeg.HighAlarm; } set { eeg.HighAlarm = value; } }
+        public double EEGLowAlarm { get { return eeg.LowAlarm; } set { eeg.LowAlarm = value; } }
+        public string EEGLowAlarmString { get { return eeg.LowAlarmString; } }
+        public string EEGHighAlarmString { get { return eeg.HighAlarmString; } }
 
-        //Raspi ----
+
+        //Resp ----
         public double RespAmplitude { set { resp.Amplitude = value; } get { return resp.Amplitude; } }
         public double RespFrequency { set { resp.Frequency = value; } get { return resp.Frequency; } }
         public int RespHarmonics { set { resp.Harmonics = value; } get { return resp.Harmonics; } }
+        public double RespHighAlarm { get { return resp.HighAlarm; } set { resp.HighAlarm = value; } }
+        public double RespLowAlarm { get { return resp.LowAlarm; } set { resp.LowAlarm = value; } }
+        public string RespiLowAlarmString { get { return resp.LowAlarmString; } }
+        public string RespiHighAlarmString { get { return resp.HighAlarmString; } }
+
 
 
         public double NextSample(double timeIndex, MonitorConstants.Parameter parameter)
