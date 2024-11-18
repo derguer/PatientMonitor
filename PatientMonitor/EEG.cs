@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PatientMonitor
 {
-    class EEG : PhysioParameter
+    class EEG : PhysioParameter, IPhysioFunctions
     {
 
         public EEG() : base() { }

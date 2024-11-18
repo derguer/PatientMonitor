@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="IPhysioFunctions.cs" />
     <Compile Include="MRImages.cs" />
     <Compile Include="PhysioParameter.cs" />
     <Compile Include="Respi.cs" />

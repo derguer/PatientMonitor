@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PatientMonitor
 {
-    class Resp : PhysioParameter
+    class Resp : PhysioParameter, IPhysioFunctions
     {
         public Resp() : base() { }
         public Resp(double amplitude, double frequency, int harmonics) : base(amplitude, frequency, harmonics) { }

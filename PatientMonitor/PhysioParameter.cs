@@ -12,6 +12,11 @@ namespace PatientMonitor
         private double frequency = 0.0;
         private int    harmonics =   1;
 
+        // new Variables
+        private double lowAlarm        = 0;
+        private double highAlarm       = 0;
+        private string lowAlarmString  = " ";
+        private string highAlarmString = " ";
 
         public double Amplitude { get { return amplitude; } set { amplitude = value; } }
         public double Frequency { get { return frequency; } set { frequency = value; } }
@@ -26,6 +31,24 @@ namespace PatientMonitor
         }
 
         public PhysioParameter() {}
+        public void displayHighAlarm(double frequency, double alarmHigh)
+        {
+            if (frequency >= alarmHigh)
+            {
+                highAlarmString = "HIGH ALARM:" + frequency;
+            }
+            else
+                highAlarmString = " ";
+        }
+        public void displayLowAlarm(double frequency, double alarmLow)
+        {
+            if (frequency <= alarmLow)
+            {
+                lowAlarmString = "LOW ALARM:" + frequency;
+            }
+            else
+                lowAlarmString = " ";
+        }
 
     }
 }

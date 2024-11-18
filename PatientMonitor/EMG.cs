@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PatientMonitor
 {
-    class EMG : PhysioParameter
+    class EMG : PhysioParameter, IPhysioFunctions
     {
         public EMG() : base() { }
         public EMG(double amplitude, double frequency, int harmonics) : base(amplitude, frequency, harmonics) { }
