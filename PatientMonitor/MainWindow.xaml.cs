@@ -415,18 +415,12 @@ namespace PatientMonitor
                 case (MonitorConstants.Parameter.ECG):
                     if (lastPatient) { 
                         patient.ECGLowAlarm = lastLowAlarmFrequency;
-                        //textBoxHightAlarm.Text = patient.ECGHighAlarm.ToString();
-                        //textBoxLowAlarm.Text = patient.ECGLowAlarm.ToString();
-                        textBlockAlarm.Text = patient.ECGHighAlarmString;
                         textBlockAlarm.Text = patient.ECGLowAlarmString;
                     }
                     break;
                 case (MonitorConstants.Parameter.EMG):
                     if (lastPatient) { 
                         patient.EMGLowAlarm = lastLowAlarmFrequency;
-                        //textBoxHightAlarm.Text = patient.EMGHighAlarm.ToString();
-                        //textBoxLowAlarm.Text = patient.EMGLowAlarm.ToString();
-                        textBlockAlarm.Text = patient.EMGHighAlarmString;
                         textBlockAlarm.Text = patient.EMGLowAlarmString;
 
                     }
@@ -434,18 +428,12 @@ namespace PatientMonitor
                 case (MonitorConstants.Parameter.EEG):
                     if (lastPatient) { 
                         patient.EEGLowAlarm = lastLowAlarmFrequency;
-                        //textBoxHightAlarm.Text = patient.EEGHighAlarm.ToString();
-                        //textBoxLowAlarm.Text = patient.EEGLowAlarm.ToString();
-                        textBlockAlarm.Text = patient.EEGHighAlarmString;
                         textBlockAlarm.Text = patient.EEGLowAlarmString;
                     }
                     break;
                 case (MonitorConstants.Parameter.Resp):
                     if (lastPatient) { 
                         patient.RespLowAlarm = lastLowAlarmFrequency;
-                        //textBoxHightAlarm.Text = patient.RespHighAlarm.ToString();
-                        //textBoxLowAlarm.Text = patient.RespLowAlarm.ToString();
-                        textBlockAlarm.Text = patient.RespiHighAlarmString;
                         textBlockAlarm.Text = patient.RespiLowAlarmString;
                     }
                     break;
@@ -468,20 +456,16 @@ namespace PatientMonitor
                     if (lastPatient)
                     {
                         patient.ECGHighAlarm = lastHighAlarmFrequency;
-                        //textBoxHightAlarm.Text = patient.ECGHighAlarm.ToString();
-                        //textBoxLowAlarm.Text = patient.ECGLowAlarm.ToString();
                         textBlockAlarm.Text = patient.ECGHighAlarmString;
-                        textBlockAlarm.Text = patient.ECGLowAlarmString;
+                        
                     }
                     break;
                 case (MonitorConstants.Parameter.EMG):
                     if (lastPatient)
                     {
                         patient.EMGHighAlarm = lastHighAlarmFrequency;
-                        //textBoxHightAlarm.Text = patient.EMGHighAlarm.ToString();
-                        //textBoxLowAlarm.Text = patient.EMGLowAlarm.ToString();
                         textBlockAlarm.Text = patient.EMGHighAlarmString;
-                        textBlockAlarm.Text = patient.EMGLowAlarmString;
+                        
 
                     }
                     break;
@@ -489,20 +473,15 @@ namespace PatientMonitor
                     if (lastPatient)
                     {
                         patient.EEGHighAlarm = lastHighAlarmFrequency;
-                        //textBoxHightAlarm.Text = patient.EEGHighAlarm.ToString();
-                        //textBoxLowAlarm.Text = patient.EEGLowAlarm.ToString();
                         textBlockAlarm.Text = patient.EEGHighAlarmString;
-                        textBlockAlarm.Text = patient.EEGLowAlarmString;
+                        
                     }
                     break;
                 case (MonitorConstants.Parameter.Resp):
                     if (lastPatient)
                     {
                         patient.RespHighAlarm = lastHighAlarmFrequency;
-                        //textBoxHightAlarm.Text = patient.RespHighAlarm.ToString();
-                        //textBoxLowAlarm.Text = patient.RespLowAlarm.ToString();
                         textBlockAlarm.Text = patient.RespiHighAlarmString;
-                        textBlockAlarm.Text = patient.RespiLowAlarmString;
                     }
                     break;
             }
