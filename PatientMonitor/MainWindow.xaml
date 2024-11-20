@@ -31,13 +31,24 @@
                 <Slider x:Name="sliderAmplitudeValue" Minimum="0" Maximum="10" Value="0" Margin="10,70,10,0" Height="20" Width="350" VerticalAlignment="Top" ValueChanged="sliderAmplitudeValue_ValueChanged" IsEnabled="False"/>
                 <TextBlock x:Name="textBlockValuesMV" HorizontalAlignment="Left" Margin="10,45,0,0" TextWrapping="Wrap" Text="0 mV         2.5 mV       5 mV       7.5 mV       10 mV" VerticalAlignment="Top" Width="348"/>
                 <TextBlock x:Name="textBlockAmplitude" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Amplitude (mV)" VerticalAlignment="Top" Width="114"/>
-                <TextBlock x:Name="textBlockFrequency" Margin="10,96,139,102" TextWrapping="Wrap" Text="ECG Frequency (cycles/minute)"/>
+                <TextBlock x:Name="textBlockFrequency" Margin="10,96,139,102" TextWrapping="Wrap" Text="Frequency"/>
                 <TextBox x:Name="textBoxFrequencyValue" HorizontalAlignment="Left" Height="23" Margin="10,120,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="70" TextChanged="textBoxFrequencyValue_TextChanged" PreviewTextInput="textBoxFrequencyValue_PreviewTextInput" GotFocus="textBoxFrequencyValue_GotFocus" LostFocus="textBoxFrequencyValue_LostFocus" IsEnabled="False"/>
-                <TextBlock x:Name="textBlockHarmonics" HorizontalAlignment="Left" Margin="118,153,0,0" TextWrapping="Wrap" Text="Harmonics : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46"/>
-                <TextBox x:Name="textBoxHightAlarm" HorizontalAlignment="Left" Height="23" Margin="267,124,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="70" TextChanged="textBoxHighAlarm_TextChanged" GotFocus="textBoxHighAlarm_GotFocus" LostFocus="textBoxHighAlarm_LostFocus" IsEnabled="False"/>
-                <TextBlock x:Name="textBlockHightAlarm" HorizontalAlignment="Left" Margin="267,99,0,0" TextWrapping="Wrap" Text="HightAlarm : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46"/>
-                <TextBox x:Name="textBoxLowAlarm" HorizontalAlignment="Left" Height="23" Margin="267,178,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="70" TextChanged="textBoxLowAlarm_TextChanged" PreviewTextInput="textBoxLowAlarm_PreviewTextInput" GotFocus="textBoxLowAlarm_GotFocus" LostFocus="textBoxLowAlarm_LostFocus" IsEnabled="False"/>
-                <TextBlock x:Name="textBlockLowAlarm" HorizontalAlignment="Left" Margin="267,155,0,0" TextWrapping="Wrap" Text="LowAlarm : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46"/>
+                <TextBlock x:Name="textBlockHarmonics" HorizontalAlignment="Left" Margin="121,161,0,0" TextWrapping="Wrap" Text="Harmonics : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46"/>
+                <TextBox x:Name="textBoxHightAlarm" HorizontalAlignment="Left" Height="23" Margin="121,120,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="70" TextChanged="textBoxHighAlarm_TextChanged" GotFocus="textBoxHighAlarm_GotFocus" LostFocus="textBoxHighAlarm_LostFocus" IsEnabled="False"/>
+                <TextBlock x:Name="textBlockHightAlarm" HorizontalAlignment="Left" Margin="121,96,0,0" TextWrapping="Wrap" Text="HighAlarm : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46"/>
+                <TextBox x:Name="textBoxLowAlarm" HorizontalAlignment="Left" Height="23" Margin="234,120,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="70" TextChanged="textBoxLowAlarm_TextChanged" PreviewTextInput="textBoxLowAlarm_PreviewTextInput" GotFocus="textBoxLowAlarm_GotFocus" LostFocus="textBoxLowAlarm_LostFocus" IsEnabled="False"/>
+                <TextBlock x:Name="textBlockLowAlarm" HorizontalAlignment="Left" Margin="234,96,0,0" TextWrapping="Wrap" Text="LowAlarm : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46"/>
+                <RadioButton x:Name="radioButtonTime" Content="Time" HorizontalAlignment="Left" Margin="260,169,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.038,0.35">
+                    <RadioButton.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-1.308"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </RadioButton.RenderTransform>
+                </RadioButton>
+                <RadioButton x:Name="radioButtonFrequency" Content="Frequency" HorizontalAlignment="Left" Margin="260,192,0,0" VerticalAlignment="Top" Width="108" RenderTransformOrigin="1.222,0.9"/>
 
 
             </Grid>
@@ -57,13 +68,13 @@
         <Button x:Name="buttonParameter" Content="Start Parameters" HorizontalAlignment="Left" Margin="514,680,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonParameter_Click" Height="25" Width="119" IsEnabled="False"/>
         <Button x:Name="buttonQuit" Content="Stop" HorizontalAlignment="Left" Margin="716,680,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonQuit_Click" Height="25" Width="36"/>
         
-        <ComboBox x:Name="comboBoxHarmonics" HorizontalAlignment="Left" Margin="548,610,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="ComboBoxHarmonics_SelectionChanged" SelectedIndex="0" IsEnabled="False" RenderTransformOrigin="0.517,0.182" IsEnabledChanged="comboBoxHarmonics_IsEnabledChanged" Height="22" >
+        <ComboBox x:Name="comboBoxHarmonics" HorizontalAlignment="Left" Margin="553,616,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="ComboBoxHarmonics_SelectionChanged" SelectedIndex="0" IsEnabled="False" RenderTransformOrigin="0.517,0.182" IsEnabledChanged="comboBoxHarmonics_IsEnabledChanged" Height="22" >
             <ComboBoxItem Content="1"/>
             <ComboBoxItem Content="2"/>
             <ComboBoxItem Content="3"/>
         </ComboBox>
-        <TextBlock x:Name="textBlockParameter" HorizontalAlignment="Left" Margin="440,584,0,0" TextWrapping="Wrap" Text="Parameter : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46" FontSize="16" Height="21" Width="84"/>
-        <ComboBox x:Name="comboBoxParameter" HorizontalAlignment="Left" Margin="440,610,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="comboBoxParameter_SelectionChanged" SelectedIndex="0" IsEnabled="False" IsEnabledChanged="comboBoxParameter_IsEnabledChanged" Height="22">
+        <TextBlock x:Name="textBlockParameter" HorizontalAlignment="Left" Margin="440,590,0,0" TextWrapping="Wrap" Text="Parameter : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46" FontSize="16" Height="21" Width="84"/>
+        <ComboBox x:Name="comboBoxParameter" HorizontalAlignment="Left" Margin="440,616,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="comboBoxParameter_SelectionChanged" SelectedIndex="0" IsEnabled="False" IsEnabledChanged="comboBoxParameter_IsEnabledChanged" Height="22" RenderTransformOrigin="0.538,2.364">
             <ComboBoxItem Content="ECG"/>
             <ComboBoxItem Content="EEG"/>
             <ComboBoxItem Content="EMG"/>
@@ -83,7 +94,7 @@
             </Grid>
 
         </GroupBox>
-        <TextBlock x:Name="textBlockAlarm"  HorizontalAlignment="Left" Margin="14,25,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="100"/>
+        <TextBlock x:Name="textBlockAlarm" HorizontalAlignment="Left" Margin="14,25,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="100"/>
 
     </Grid>
 </Window>

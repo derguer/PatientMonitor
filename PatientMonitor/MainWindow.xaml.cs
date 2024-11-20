@@ -401,7 +401,7 @@ namespace PatientMonitor
 
                 // Set the ImageSource of the Image
                 MyImage.Source = bitmap; // Verwende "MyImage" anstelle von "MyImageBrush"
-                timer.Stop();
+                //timer.Stop();
             }
         }
 

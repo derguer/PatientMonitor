@@ -59,6 +59,7 @@ namespace PatientMonitor
             get => base.HighAlarm;
             set => base.HighAlarm = value;
         }
+
     }
 }
 
