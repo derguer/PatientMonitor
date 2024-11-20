@@ -13,7 +13,7 @@ namespace PatientMonitor
 
         
 
-        public double NextSample(double timeIndex)
+        public override double NextSample(double timeIndex)
         {
             const double HzToBeatsPerMin = 6000.0;
             double sample;
@@ -59,6 +59,7 @@ namespace PatientMonitor
             get => base.HighAlarm;
             set => base.HighAlarm = value;
         }
+       
 
     }
 }

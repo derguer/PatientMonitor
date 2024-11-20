@@ -11,7 +11,7 @@ namespace PatientMonitor
         public Resp() : base() { }
         public Resp(double amplitude, double frequency, int harmonics) : base(amplitude, frequency, harmonics) { }
 
-        public double NextSample(double timeIndex)
+        public override double NextSample(double timeIndex)
         {
 
             timeIndex = timeIndex / 6000;

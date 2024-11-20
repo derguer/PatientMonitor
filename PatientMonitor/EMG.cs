@@ -11,7 +11,7 @@ namespace PatientMonitor
         public EMG() : base() { }
         public EMG(double amplitude, double frequency, int harmonics) : base(amplitude, frequency, harmonics) { }
 
-        public double NextSample(double timeIndex)
+        public override double NextSample(double timeIndex)
         {
             double sample       = 0.0;
             double stepIndex    = 0.0;

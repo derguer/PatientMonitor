@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PatientMonitor
 {
-    class PhysioParameter
+    abstract class PhysioParameter
     {
         private double amplitude = 0.0;
         private double frequency = 0.0;
@@ -71,6 +71,8 @@ namespace PatientMonitor
             else
                 lowAlarmString = " ";
         }
+
+        public abstract double NextSample(double timeIndex);
 
     }
 }
