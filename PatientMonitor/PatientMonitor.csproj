@@ -68,6 +68,7 @@
     <Compile Include="MRImages.cs" />
     <Compile Include="PhysioParameter.cs" />
     <Compile Include="Respi.cs" />
+    <Compile Include="Spektrum.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
