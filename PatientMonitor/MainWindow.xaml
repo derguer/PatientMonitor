@@ -38,7 +38,7 @@
                 <TextBlock x:Name="textBlockHightAlarm" HorizontalAlignment="Left" Margin="121,96,0,0" TextWrapping="Wrap" Text="HighAlarm : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46"/>
                 <TextBox x:Name="textBoxLowAlarm" HorizontalAlignment="Left" Height="23" Margin="234,120,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="70" TextChanged="textBoxLowAlarm_TextChanged" PreviewTextInput="textBoxLowAlarm_PreviewTextInput" GotFocus="textBoxLowAlarm_GotFocus" LostFocus="textBoxLowAlarm_LostFocus" IsEnabled="False"/>
                 <TextBlock x:Name="textBlockLowAlarm" HorizontalAlignment="Left" Margin="234,96,0,0" TextWrapping="Wrap" Text="LowAlarm : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46"/>
-                <RadioButton x:Name="radioButtonTime" Content="Time" HorizontalAlignment="Left" Margin="260,169,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.038,0.35">
+                <RadioButton x:Name="radioButtonTime" Content="Time" HorizontalAlignment="Left" Margin="260,169,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.038,0.35" IsEnabled="False">
                     <RadioButton.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -48,7 +48,7 @@
                         </TransformGroup>
                     </RadioButton.RenderTransform>
                 </RadioButton>
-                <RadioButton x:Name="radioButtonFrequency" Content="Frequency" HorizontalAlignment="Left" Margin="260,192,0,0" VerticalAlignment="Top" Width="108" RenderTransformOrigin="1.222,0.9"/>
+                <RadioButton x:Name="radioButtonFrequency" Content="Frequency" HorizontalAlignment="Left" Margin="260,192,0,0" VerticalAlignment="Top" Width="108" RenderTransformOrigin="1.222,0.9" IsEnabled="False" Checked="radioButtonFrequency_Checked" Unchecked="radioButtonFrequency_Unchecked"/>
 
 
             </Grid>

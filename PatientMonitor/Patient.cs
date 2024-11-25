@@ -86,6 +86,11 @@ namespace PatientMonitor
         public string RespiLowAlarmString { get { return resp.LowAlarmString; } }
         public string RespiHighAlarmString { get { return resp.HighAlarmString; } }
 
+        public List<double> SampleList
+        {
+            get { return sampleList; }
+        }
+
 
 
         public double NextSample(double timeIndex, MonitorConstants.Parameter parameter)
@@ -110,6 +115,13 @@ namespace PatientMonitor
                 default:
                     break;
             }
+
+            if (sampleList.Count >= maxSamples)
+            {
+                sampleList.RemoveAt(0); // Remove the oldest sample
+            }
+            sampleList.Add(nextSample);
+
             return (nextSample);
         }
 

@@ -193,6 +193,10 @@ namespace PatientMonitor
             textBoxHightAlarm.IsEnabled = true;
             textBoxLowAlarm.IsEnabled = true;
 
+            // Time or Frequency Buttons 
+            radioButtonFrequency.IsEnabled = true;
+            radioButtonTime.IsEnabled = true;
+
         }
 
         private void textBoxPatientAge_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -538,6 +542,17 @@ namespace PatientMonitor
                 comboBoxHarmonics.Visibility = Visibility.Collapsed; textBlockHarmonics.Text = "";
             }
         }
+
+        private void radioButtonFrequency_Checked(object sender, RoutedEventArgs e)
+        {
+            UpdateAxisTitles();
+        }
+
+        private void radioButtonFrequency_Unchecked(object sender, RoutedEventArgs e)
+        {
+            UpdateAxisTitles();
+        }
+
         private void displayTime()
         {
             //Add your instructions here
@@ -552,7 +567,62 @@ namespace PatientMonitor
         }
         private void displayFrequency()
         {
-            //Add your instructions here
+            const int sampleSize = 512; // FFT dimension
+            const double samplingRate = 6000.0; // Example sampling rate in Hz
+            Spektrum spektrum = new Spektrum(sampleSize);
+
+            // Prüfe, ob genügend Samples verfügbar sind
+            if (patient.SampleList.Count < sampleSize)
+            {
+                MessageBox.Show("Not enough samples available for FFT calculation.");
+                return;
+            }
+
+            // Letzte 512 Samples aus SampleList extrahieren
+            double[] timeDomainData = patient.SampleList
+                .Skip(patient.SampleList.Count - sampleSize) // Überspringe ältere Werte
+                .Take(sampleSize) // Nimm die letzten 512 Samples
+                .ToArray();
+
+            // Perform FFT and retrieve frequency spectrum
+            double[] frequencySpectrum = spektrum.FFT(timeDomainData, sampleSize);
+
+            // Clear old data points and update with frequency spectrum
+            dataPoints.Clear();
+
+            // Fülle die Datenpunkte für die Darstellung
+            for (int i = 0; i < frequencySpectrum.Length / 2; i++) // Nur positive Frequenzen
+            {
+                double frequency = i * (samplingRate / sampleSize); // Frequenz berechnen
+                double amplitude = frequencySpectrum[i]; // Amplitude abrufen
+                dataPoints.Add(new KeyValuePair<int, double>((int)frequency, amplitude));
+            }
+
+            // Aktualisiere die Anzeige
+            lineSeriesECG.ItemsSource = null; // Reset ItemsSource
+            lineSeriesECG.ItemsSource = dataPoints;
+
         }
+
+        private void UpdateAxisTitles()
+        {
+            if (radioButtonFrequency.IsChecked == true)
+            {
+                // Setze Achsentitel für Frequenzdarstellung
+                ((LinearAxis)lineSeriesECG.IndependentAxis).Title = "Frequency (Hz)";
+                ((LinearAxis)lineSeriesECG.DependentRangeAxis).Title = "Magnitude";
+
+
+            }
+            else
+            {
+                // Setze Achsentitel für Zeitdarstellung
+                ((LinearAxis)lineSeriesECG.IndependentAxis).Title = "Time (ms)";
+                
+                ((LinearAxis)lineSeriesECG.DependentRangeAxis).Title = "Value (mA)";
+            }
+        }
+
+
     }
 }
