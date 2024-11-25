@@ -18,7 +18,11 @@ namespace PatientMonitor
         private string patientName;
         private DateTime dateOfStudy;
         private int age;
-        
+
+        // New Variables for delivery 6
+        const int maxSamples = 1024;
+        List<double> sampleList = new List<double>(maxSamples);
+
 
         public int Age { get { return age; } set { age = value; } }
         public string PatientName { get {return patientName; } set {patientName=value; } }

@@ -69,15 +69,10 @@ namespace PatientMonitor
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
-            // Generate a new data point
-            
-            if (patient != null) dataPoints.Add(new KeyValuePair<int, double>(index++, patient.NextSample(index, parameter)));
-            
-            // Optional: Remove old points to keep the chart clean
-            if (dataPoints.Count > 200) // Maximum number of points
-            {
-                dataPoints.RemoveAt(0); // Remove the oldest point
-            }
+            if (radioButtonTime.IsChecked == true)
+                displayTime();
+            else if (radioButtonFrequency.IsChecked == true)
+                displayFrequency();
         }
 
         private void textBoxPatientName_TextChanged(object sender, TextChangedEventArgs e)
@@ -542,6 +537,22 @@ namespace PatientMonitor
                 comboBoxHarmonics.IsEnabled = false;
                 comboBoxHarmonics.Visibility = Visibility.Collapsed; textBlockHarmonics.Text = "";
             }
+        }
+        private void displayTime()
+        {
+            //Add your instructions here
+            // Generate a new data point          
+            if (patient != null) dataPoints.Add(new KeyValuePair<int, double>(index++, patient.NextSample(index, parameter)));
+
+            // Optional: Remove old points to keep the chart clean
+            if (dataPoints.Count > 200) // Maximum number of points
+            {
+                dataPoints.RemoveAt(0); // Remove the oldest point
+            }
+        }
+        private void displayFrequency()
+        {
+            //Add your instructions here
         }
     }
 }
