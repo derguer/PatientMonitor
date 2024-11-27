@@ -17,5 +17,15 @@ namespace PatientMonitor
         }
 
         public Bitmap AnImage { get {return anImage; } set { anImage = value; } }
+        
+        // New Methods in the Class for Delivery 7
+        public void forwardImages()
+        {
+            // called by the “next” button, you set the image to visualize one index further
+        }
+        public void backImages()
+        {
+            // called by the “prev” button, you set the image to visualize one index behind
+        }
     }
 }

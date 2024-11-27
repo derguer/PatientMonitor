@@ -555,6 +555,7 @@ namespace PatientMonitor
 
         private void displayTime()
         {
+            
             //Add your instructions here
             // Generate a new data point          
             if (patient != null) dataPoints.Add(new KeyValuePair<int, double>(index++, patient.NextSample(index, parameter)));
@@ -601,6 +602,7 @@ namespace PatientMonitor
             // Aktualisiere die Anzeige
             lineSeriesECG.ItemsSource = null; // Reset ItemsSource
             lineSeriesECG.ItemsSource = dataPoints;
+           
 
         }
 
