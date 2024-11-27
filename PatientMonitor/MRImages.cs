@@ -9,6 +9,11 @@ namespace PatientMonitor
 {
     internal class MRImages
     {
+        
+        int maxImages = 10; //this number can be changed
+        private int currentImageIndex = 0; string stringBase = "";
+        string stringImage = "";
+
         private Bitmap anImage;
         public MRImages() { }
         public void loadImages(string imageFile)
