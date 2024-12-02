@@ -15,14 +15,14 @@
         </Grid.ColumnDefinitions>
         <toolkit:Chart Title="Real-time ECG" Height="400" VerticalAlignment="Top">
             <toolkit:LineSeries x:Name="lineSeriesECG"
-                                        Title="ECG Channel1"
+                                        Title="ECG Channel1" 
                                         IndependentValueBinding="{Binding Key}"
                                         DependentValueBinding="{Binding Value}">
                 <toolkit:LineSeries.IndependentAxis>
-                    <toolkit:LinearAxis Orientation="X" Title="Time (ms)" />
+                    <toolkit:LinearAxis Orientation="X" Title="Time (ms)" ShowGridLines="True"  />
                 </toolkit:LineSeries.IndependentAxis>
                 <toolkit:LineSeries.DependentRangeAxis>
-                    <toolkit:LinearAxis Orientation="Y" Title="Value (mA)" />
+                    <toolkit:LinearAxis Orientation="Y" Title="Value (mA)" ShowGridLines="True"  />
                 </toolkit:LineSeries.DependentRangeAxis>
             </toolkit:LineSeries>
         </toolkit:Chart>
@@ -38,18 +38,6 @@
                 <TextBlock x:Name="textBlockHightAlarm" HorizontalAlignment="Left" Margin="121,96,0,0" TextWrapping="Wrap" Text="HighAlarm : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46"/>
                 <TextBox x:Name="textBoxLowAlarm" HorizontalAlignment="Left" Height="23" Margin="234,120,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="70" TextChanged="textBoxLowAlarm_TextChanged" PreviewTextInput="textBoxLowAlarm_PreviewTextInput" GotFocus="textBoxLowAlarm_GotFocus" LostFocus="textBoxLowAlarm_LostFocus" IsEnabled="False"/>
                 <TextBlock x:Name="textBlockLowAlarm" HorizontalAlignment="Left" Margin="234,96,0,0" TextWrapping="Wrap" Text="LowAlarm : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46"/>
-                <RadioButton x:Name="radioButtonTime" Content="Time" HorizontalAlignment="Left" Margin="260,169,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.038,0.35" IsEnabled="False">
-                    <RadioButton.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform/>
-                            <RotateTransform Angle="-1.308"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </RadioButton.RenderTransform>
-                </RadioButton>
-                <RadioButton x:Name="radioButtonFrequency" Content="Frequency" HorizontalAlignment="Left" Margin="260,192,0,0" VerticalAlignment="Top" Width="108" RenderTransformOrigin="1.222,0.9" IsEnabled="False" Checked="radioButtonFrequency_Checked" Unchecked="radioButtonFrequency_Unchecked"/>
-
 
             </Grid>
         </GroupBox>
@@ -67,7 +55,7 @@
         </GroupBox>
         <Button x:Name="buttonParameter" Content="Start Parameters" HorizontalAlignment="Left" Margin="514,680,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonParameter_Click" Height="25" Width="119" IsEnabled="False"/>
         <Button x:Name="buttonQuit" Content="Stop" HorizontalAlignment="Left" Margin="716,680,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonQuit_Click" Height="25" Width="36"/>
-        
+
         <ComboBox x:Name="comboBoxHarmonics" HorizontalAlignment="Left" Margin="553,616,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="ComboBoxHarmonics_SelectionChanged" SelectedIndex="0" IsEnabled="False" RenderTransformOrigin="0.517,0.182" IsEnabledChanged="comboBoxHarmonics_IsEnabledChanged" Height="22" >
             <ComboBoxItem Content="1"/>
             <ComboBoxItem Content="2"/>
@@ -81,7 +69,7 @@
             <ComboBoxItem Content="Respiration"/>
         </ComboBox>
         <GroupBox Margin="10,0,0,0" Header="MR Images" FontSize="16" Grid.Column="1">
-            <Grid Margin="0,637,-2,-5">
+            <Grid Margin="0,319,-2,313">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="39*"/>
                     <ColumnDefinition Width="23*"/>
@@ -89,12 +77,31 @@
                 <Button x:Name="buttonLoadImage" Content="loeadImage" HorizontalAlignment="Left" Margin="150,20,0,0" VerticalAlignment="Top" Width="100" FontSize="16" Click="buttonLoadImage_Click" IsEnabled="False"/>
                 <Button x:Name="buttonPrev" Content="prev" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Width="74" FontSize="16" IsEnabled="False"/>
                 <Button x:Name="buttonNext" Content="next" HorizontalAlignment="Left" Margin="300,20,0,0" VerticalAlignment="Top" Width="74" FontSize="16" IsEnabled="False" Click="buttonNext_Click"/>
-                <Image x:Name="MyImage" Margin="10,-632,20,114" Grid.ColumnSpan="2" />
+                <Image x:Name="MyImage" Margin="10,-316,20,65" Grid.ColumnSpan="2" />
 
+                <toolkit:Chart Title="Frequency Analysis" Height="300" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Margin="-8,72,7,-313">
+                    <toolkit:LineSeries x:Name="lineSeriesFFT"
+                        Title =""
+                        IndependentValueBinding="{Binding Key}"
+                        DependentValueBinding="{Binding Value}">
+                        <!-- X-Axis -->
+                        <toolkit:LineSeries.IndependentAxis>
+                            <toolkit:LinearAxis Orientation="X" Title="Frequency (Hz)" ShowGridLines="True" />
+                        </toolkit:LineSeries.IndependentAxis>
+
+                        <!-- Y-Axis -->
+                        <toolkit:LineSeries.DependentRangeAxis>
+                            <toolkit:LinearAxis Orientation="Y" Title="Energy (dB)" ShowGridLines="True" />
+                        </toolkit:LineSeries.DependentRangeAxis>
+                    </toolkit:LineSeries>
+                </toolkit:Chart>
             </Grid>
 
         </GroupBox>
         <TextBlock x:Name="textBlockAlarm" HorizontalAlignment="Left" Margin="14,25,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="100"/>
+        <CheckBox Content="CheckBox" HorizontalAlignment="Left" Margin="-90,596,0,0" VerticalAlignment="Top"/>
+        <Grid HorizontalAlignment="Left" Height="100" Margin="137,268,0,0" VerticalAlignment="Top" Width="100"/>
+        <Button x:Name="buttonFFT" Content="FFT" Grid.Column="1" HorizontalAlignment="Left" Margin="604,618,0,0" VerticalAlignment="Top" Width="60" IsEnabled="False" Click="buttonFFT_Click"/>
 
     </Grid>
 </Window>

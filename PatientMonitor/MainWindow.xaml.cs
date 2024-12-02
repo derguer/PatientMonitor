@@ -27,52 +27,56 @@ namespace PatientMonitor
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ObservableCollection<KeyValuePair<int, double>> dataPoints;
+        private double lastFrequency, lastHighAlarmFrequency, lastLowAlarmFrequency;
+        private double ampValue;
+
+        private DateTime dateTime;
+
+        private int index;
+        private int lastPatientAge;
+        private int lastHarmonics, lastlastHarmonics;
+        private const int sampleSize = 512; // FFT dimension
+
+        private bool lastPatient = false;
+
+        private ObservableCollection<KeyValuePair<int, double>> dataPointsTime;
+        private ObservableCollection<KeyValuePair<int, double>> dataPointsFrequency;
         private DispatcherTimer timer;
-        private int index = 0;
-        Patient patient;
+        private Patient patient;
 
-        string lastPatientName = "";
-        int lastPatientAge;
-        DateTime dateTime;
-        double lastFrequency, lastHighAlarmFrequency, lastLowAlarmFrequency;
-        int lastHarmonics, lastlastHarmonics;
-        double ampValue;
-        bool lastPatient = false;
+        private MonitorConstants.Parameter parameter;
 
-        MonitorConstants.Parameter parameter;
-
-        MonitorConstants.Parameter[] allParameter = { 
-            MonitorConstants.Parameter.ECG, 
-            MonitorConstants.Parameter.EMG, 
-            MonitorConstants.Parameter.EEG, 
-            MonitorConstants.Parameter.Resp 
-        };
-
-        MonitorConstants.Parameter[] savedParameters = {
+        private MonitorConstants.Parameter[] allParameter = {
             MonitorConstants.Parameter.ECG,
             MonitorConstants.Parameter.EMG,
             MonitorConstants.Parameter.EEG,
             MonitorConstants.Parameter.Resp
         };
 
+        private MonitorConstants.Parameter[] savedParameters = {
+            MonitorConstants.Parameter.ECG,
+            MonitorConstants.Parameter.EMG,
+            MonitorConstants.Parameter.EEG,
+            MonitorConstants.Parameter.Resp
+        };
+
+        private string lastPatientName = "";
+
+
         public MainWindow()
         {
             InitializeComponent();
-            dataPoints = new ObservableCollection<KeyValuePair<int, double>>();
-            lineSeriesECG.ItemsSource = dataPoints; // Bind the series to the data points
-            
+            dataPointsTime = new ObservableCollection<KeyValuePair<int, double>>();
+            dataPointsFrequency = new ObservableCollection<KeyValuePair<int, double>>();
+            lineSeriesECG.ItemsSource = dataPointsTime; // Bind the series to the data points
+
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(1); // Set timer to tick every second
             timer.Tick += Timer_Tick;
-            timer.Start();
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if (radioButtonTime.IsChecked == true)
-                displayTime();
-            else if (radioButtonFrequency.IsChecked == true)
-                displayFrequency();
+                 displayTime();       
         }
 
         private void textBoxPatientName_TextChanged(object sender, TextChangedEventArgs e)
@@ -164,11 +168,6 @@ namespace PatientMonitor
                 MessageBox.Show("Patient was created!");
                 //buttonStartSimulation.IsEnabled = true;
             }
-            else
-            {
-               // MessageBox.Show("Fill all boxes!");
-            }
-
         }
 
         private void buttonQuit_Click(object sender, RoutedEventArgs e)
@@ -178,6 +177,7 @@ namespace PatientMonitor
 
         private void buttonParameter_Click(object sender, RoutedEventArgs e)
         {
+           
             timer.Start();
             sliderAmplitudeValue.IsEnabled = true;
             textBoxFrequencyValue.IsEnabled = true;
@@ -192,10 +192,7 @@ namespace PatientMonitor
             //Alarm
             textBoxHightAlarm.IsEnabled = true;
             textBoxLowAlarm.IsEnabled = true;
-
-            // Time or Frequency Buttons 
-            radioButtonFrequency.IsEnabled = true;
-            radioButtonTime.IsEnabled = true;
+            buttonFFT.IsEnabled = true;
 
         }
 
@@ -257,10 +254,7 @@ namespace PatientMonitor
             if (lastPatient) { 
                 
                 patient.ECGHarmonics = lastHarmonics; 
-                UpdateHarmonics();
-                //patient.ECGLowAlarm = lastLowAlarmFrequency;
-                //patient.ECGHighAlarm = lastHighAlarmFrequency;
-            
+                UpdateHarmonics();    
             }
         }
 
@@ -527,6 +521,19 @@ namespace PatientMonitor
             }
         }
 
+        private void buttonFFT_Click(object sender, RoutedEventArgs e)
+        {
+         
+            if (patient.SampleList.Count > 512)
+            {
+                displayFrequency();
+            }
+            else
+            {
+                MessageBox.Show("Not enough samples available for FFT calculation.");
+            }
+        }
+
         private void comboBoxHarmonics_deaktivation(bool ein_oderAus)
         {
             if (ein_oderAus)
@@ -542,42 +549,25 @@ namespace PatientMonitor
                 comboBoxHarmonics.Visibility = Visibility.Collapsed; textBlockHarmonics.Text = "";
             }
         }
-
-        private void radioButtonFrequency_Checked(object sender, RoutedEventArgs e)
-        {
-            UpdateAxisTitles();
-        }
-
-        private void radioButtonFrequency_Unchecked(object sender, RoutedEventArgs e)
-        {
-            UpdateAxisTitles();
-        }
-
         private void displayTime()
         {
-            
-            //Add your instructions here
+             
             // Generate a new data point          
-            if (patient != null) dataPoints.Add(new KeyValuePair<int, double>(index++, patient.NextSample(index, parameter)));
+            if (patient != null) dataPointsTime.Add(new KeyValuePair<int, double>(index++, patient.NextSample(index, parameter)));
 
             // Optional: Remove old points to keep the chart clean
-            if (dataPoints.Count > 200) // Maximum number of points
+            if (dataPointsTime.Count > 200) // Maximum number of points
             {
-                dataPoints.RemoveAt(0); // Remove the oldest point
+                dataPointsTime.RemoveAt(0); // Remove the oldest point
             }
         }
         private void displayFrequency()
         {
-            const int sampleSize = 512; // FFT dimension
+            
             const double samplingRate = 6000.0; // Example sampling rate in Hz
             Spektrum spektrum = new Spektrum(sampleSize);
 
-            // Prüfe, ob genügend Samples verfügbar sind
-            if (patient.SampleList.Count < sampleSize)
-            {
-                MessageBox.Show("Not enough samples available for FFT calculation.");
-                return;
-            }
+
 
             // Letzte 512 Samples aus SampleList extrahieren
             double[] timeDomainData = patient.SampleList
@@ -589,42 +579,20 @@ namespace PatientMonitor
             double[] frequencySpectrum = spektrum.FFT(timeDomainData, sampleSize);
 
             // Clear old data points and update with frequency spectrum
-            dataPoints.Clear();
+            dataPointsFrequency.Clear();
 
             // Fülle die Datenpunkte für die Darstellung
             for (int i = 0; i < frequencySpectrum.Length / 2; i++) // Nur positive Frequenzen
             {
                 double frequency = i * (samplingRate / sampleSize); // Frequenz berechnen
                 double amplitude = frequencySpectrum[i]; // Amplitude abrufen
-                dataPoints.Add(new KeyValuePair<int, double>((int)frequency, amplitude));
+                dataPointsFrequency.Add(new KeyValuePair<int, double>((int)frequency, amplitude));
             }
 
             // Aktualisiere die Anzeige
-            lineSeriesECG.ItemsSource = null; // Reset ItemsSource
-            lineSeriesECG.ItemsSource = dataPoints;
-           
+            lineSeriesFFT.ItemsSource = null; // Reset ItemsSource
+            lineSeriesFFT.ItemsSource = dataPointsFrequency;
 
         }
-
-        private void UpdateAxisTitles()
-        {
-            if (radioButtonFrequency.IsChecked == true)
-            {
-                // Setze Achsentitel für Frequenzdarstellung
-                ((LinearAxis)lineSeriesECG.IndependentAxis).Title = "Frequency (Hz)";
-                ((LinearAxis)lineSeriesECG.DependentRangeAxis).Title = "Magnitude";
-
-
-            }
-            else
-            {
-                // Setze Achsentitel für Zeitdarstellung
-                ((LinearAxis)lineSeriesECG.IndependentAxis).Title = "Time (ms)";
-                
-                ((LinearAxis)lineSeriesECG.DependentRangeAxis).Title = "Value (mA)";
-            }
-        }
-
-
     }
 }
