@@ -17,11 +17,12 @@ namespace PatientMonitor
 
         private string patientName;
         private DateTime dateOfStudy;
-        private int age;
 
-        // New Variables for delivery 6
-        const int maxSamples = 1024;
         List<double> sampleList = new List<double>(maxSamples);
+
+        private int age;
+        const int maxSamples = 1024;
+
 
 
         public int Age { get { return age; } set { age = value; } }
@@ -35,7 +36,7 @@ namespace PatientMonitor
             emg = new  EMG(amplitude, frequency, harmonics);
             eeg = new  EEG(amplitude, frequency, harmonics);
             resp = new Resp(amplitude, frequency, harmonics);
-            mRImages = new MRImages(); mRImages.loadImages("Z:/Softwaretechnik/Labore/PatientMonitor/MRT_Bilder/CT+MR+contrast+montage-1574688855.jpg");
+            mRImages = new MRImages();
         }
         public Patient(string patientName, int age, DateTime dateOfStudy)
         {
@@ -46,6 +47,16 @@ namespace PatientMonitor
             resp = new Resp();
         }
 
+        public MRImages MRImages {
+            get
+            {
+                if (mRImages == null)
+                {
+                    mRImages = new MRImages();
+                }
+                return mRImages;
+            }
+        }
 
         //ECG ----
         public double ECGAmplitude { set {ecg.Amplitude=value; } get { return ecg.Amplitude; } }
@@ -93,6 +104,7 @@ namespace PatientMonitor
 
 
 
+
         public double NextSample(double timeIndex, MonitorConstants.Parameter parameter)
         {
             double nextSample = 0.0;
@@ -124,6 +136,7 @@ namespace PatientMonitor
 
             return (nextSample);
         }
+
 
     }
 }

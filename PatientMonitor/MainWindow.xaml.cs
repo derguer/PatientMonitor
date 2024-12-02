@@ -185,14 +185,15 @@ namespace PatientMonitor
             comboBoxParameter.IsEnabled = true;
 
             //Image Buttons
-            buttonPrev.IsEnabled = false;
-            buttonNext.IsEnabled = false;
+            buttonPrev.IsEnabled = true;
+            buttonNext.IsEnabled = true;
             buttonLoadImage.IsEnabled = true;
 
             //Alarm
             textBoxHightAlarm.IsEnabled = true;
             textBoxLowAlarm.IsEnabled = true;
             buttonFFT.IsEnabled = true;
+
 
         }
 
@@ -377,24 +378,32 @@ namespace PatientMonitor
 
         private void buttonLoadImage_Click(object sender, RoutedEventArgs e)
         {
-            // Create an OpenFileDialog
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image files (*.bmp;*.jpg;*.png)|*.bmp;*.jpg;*.png|All files (*.*)|*.*";
+            if (patient == null || patient.MRImages == null)
+            {
+                MessageBox.Show("No patient or image database initialized.");
+                return;
+            }
 
-            // Show the dialog and check if the result is OK
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Image files (*.bmp)|*.bmp|All files (*.*)|*.*"
+            };
+
             if (openFileDialog.ShowDialog() == true)
             {
-                // Create a new BitmapImage
-                BitmapImage bitmap = new BitmapImage();
-                // Set the UriSource to load the image from the file
-                bitmap.BeginInit();
-                bitmap.UriSource = new Uri(openFileDialog.FileName, UriKind.Absolute);
-                bitmap.CacheOption = BitmapCacheOption.OnLoad; // Cache option to ensure the file can be accessed immediately
-                bitmap.EndInit();
+                try
+                {
+                    // Lade die Bilder basierend auf dem ausgewählten Bild
+                    patient.MRImages.LoadImages(openFileDialog.FileName);
 
-                // Set the ImageSource of the Image
-                MyImage.Source = bitmap; // Verwende "MyImage" anstelle von "MyImageBrush"
-                //timer.Stop();
+                    // Zeige das erste Bild (Base01.bmp)
+                    MyImage.Source = patient.MRImages.AnImage;
+                    textBoxImageIndex.Text = patient.MRImages.GetImageIndexText();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to load images: {ex.Message}");
+                }
             }
         }
 
@@ -435,7 +444,23 @@ namespace PatientMonitor
 
         private void buttonNext_Click(object sender, RoutedEventArgs e)
         {
+            if (patient == null || patient.MRImages == null)
+            {
+                MessageBox.Show("No patient or image database initialized.");
+                return;
+            }
 
+            try
+            {
+                // Nächstes Bild anzeigen
+                patient.MRImages.ForwardImage();
+                MyImage.Source = patient.MRImages.AnImage;
+                textBoxImageIndex.Text = patient.MRImages.GetImageIndexText();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to navigate to the next image: {ex.Message}");
+            }
         }
 
         private void textBoxHighAlarm_TextChanged(object sender, TextChangedEventArgs e)
@@ -532,6 +557,87 @@ namespace PatientMonitor
             {
                 MessageBox.Show("Not enough samples available for FFT calculation.");
             }
+        }
+
+        private void buttonPrev_Click(object sender, RoutedEventArgs e)
+        {
+            if (patient == null || patient.MRImages == null)
+            {
+                MessageBox.Show("No patient or image database initialized.");
+                return;
+            }
+
+            try
+            {
+                // Vorheriges Bild anzeigen
+                patient.MRImages.BackwardImage();
+                MyImage.Source = patient.MRImages.AnImage;
+                textBoxImageIndex.Text = patient.MRImages.GetImageIndexText();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to navigate to the previous image: {ex.Message}");
+            }
+        }
+
+        private void textBoxMaxImages_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (int.TryParse(textBoxImageIndex.Text, out int newMaxImages) && newMaxImages > 0)
+            {
+                try
+                {
+                    // Begrenze die Anzahl der Bilder und aktualisiere die Anzeige
+                    patient.MRImages.SetMaxImages(newMaxImages);
+
+                    // Aktualisiere das aktuelle Bild und den Index
+                    MyImage.Source = patient.MRImages.AnImage;
+                    textBoxImageIndex.Text = patient.MRImages.GetImageIndexText();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(textBoxImageIndex.Text))
+            {
+                // Für ungültige Eingaben: Zeige einen Platzhalterwert
+                textBoxImageIndex.Text = patient.MRImages.MaxImages.ToString();
+            }
+        }
+
+        private void textBoxMaxImages_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (int.TryParse(textBoxImageIndex.Text, out int newMaxImages) && newMaxImages > 0)
+                {
+                    try
+                    {
+                        // Begrenze die Anzahl der Bilder und aktualisiere die Anzeige
+                        patient.MRImages.SetMaxImages(newMaxImages);
+
+                        // Aktualisiere das aktuelle Bild und den Index
+                        MyImage.Source = patient.MRImages.AnImage;
+                        textBoxImageIndex.Text = patient.MRImages.GetImageIndexText();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Invalid input. Please enter a positive integer.");
+                    textBoxImageIndex.Text = patient.MRImages.MaxImages.ToString(); // Setze den alten Wert zurück
+                }
+            }
+        }
+
+        
+
+        private void textBoxMaxImages_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !int.TryParse(e.Text, out _); // Blockiere nicht-numerische Eingaben
         }
 
         private void comboBoxHarmonics_deaktivation(bool ein_oderAus)

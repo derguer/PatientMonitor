@@ -74,9 +74,9 @@
                     <ColumnDefinition Width="39*"/>
                     <ColumnDefinition Width="23*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="buttonLoadImage" Content="loeadImage" HorizontalAlignment="Left" Margin="150,20,0,0" VerticalAlignment="Top" Width="100" FontSize="16" Click="buttonLoadImage_Click" IsEnabled="False"/>
-                <Button x:Name="buttonPrev" Content="prev" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Width="74" FontSize="16" IsEnabled="False"/>
-                <Button x:Name="buttonNext" Content="next" HorizontalAlignment="Left" Margin="300,20,0,0" VerticalAlignment="Top" Width="74" FontSize="16" IsEnabled="False" Click="buttonNext_Click"/>
+                <Button x:Name="buttonLoadImage" Content="loeadImage" HorizontalAlignment="Left" Margin="120,20,0,0" VerticalAlignment="Top" Width="100" FontSize="16" Click="buttonLoadImage_Click" IsEnabled="False"/>
+                <Button x:Name="buttonPrev" Content="prev" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Width="74" FontSize="16" IsEnabled="False" Click="buttonPrev_Click"/>
+                <Button x:Name="buttonNext" Content="next" Margin="260,20,86,0" VerticalAlignment="Top" FontSize="16" IsEnabled="False" Click="buttonNext_Click"/>
                 <Image x:Name="MyImage" Margin="10,-316,20,65" Grid.ColumnSpan="2" />
 
                 <toolkit:Chart Title="Frequency Analysis" Height="300" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Margin="-8,72,7,-313">
@@ -95,6 +95,9 @@
                         </toolkit:LineSeries.DependentRangeAxis>
                     </toolkit:LineSeries>
                 </toolkit:Chart>
+                <TextBox x:Name="textBoxImageIndex" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="380,20,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"
+         PreviewKeyDown="textBoxMaxImages_PreviewKeyDown"
+         PreviewTextInput="textBoxMaxImages_PreviewTextInput"/>
             </Grid>
 
         </GroupBox>
