@@ -378,6 +378,7 @@ namespace PatientMonitor
 
         private void buttonLoadImage_Click(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show("Valid name-format for image file: " + "\n BASE**.ext \n BASE is an arbitary string \n ** are 2 digits \n .ext is the image format");
             if (patient == null || patient.MRImages == null)
             {
                 MessageBox.Show("No patient or image database initialized.");

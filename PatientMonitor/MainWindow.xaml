@@ -95,13 +95,13 @@
                         </toolkit:LineSeries.DependentRangeAxis>
                     </toolkit:LineSeries>
                 </toolkit:Chart>
-                <TextBox x:Name="textBoxImageIndex" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="380,20,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"
+                <TextBox x:Name="textBoxImageIndex" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="380,20,0,0" TextWrapping="Wrap" Text="MaxImages" VerticalAlignment="Top" Width="120"
          PreviewKeyDown="textBoxMaxImages_PreviewKeyDown"
          PreviewTextInput="textBoxMaxImages_PreviewTextInput"/>
             </Grid>
 
         </GroupBox>
-        <TextBlock x:Name="textBlockAlarm" HorizontalAlignment="Left" Margin="14,25,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="100"/>
+        <TextBlock x:Name="textBlockAlarm" HorizontalAlignment="Left" Margin="14,25,0,0" TextWrapping="Wrap" Text=" " VerticalAlignment="Top" Width="100"/>
         <CheckBox Content="CheckBox" HorizontalAlignment="Left" Margin="-90,596,0,0" VerticalAlignment="Top"/>
         <Grid HorizontalAlignment="Left" Height="100" Margin="137,268,0,0" VerticalAlignment="Top" Width="100"/>
         <Button x:Name="buttonFFT" Content="FFT" Grid.Column="1" HorizontalAlignment="Left" Margin="604,618,0,0" VerticalAlignment="Top" Width="60" IsEnabled="False" Click="buttonFFT_Click"/>
