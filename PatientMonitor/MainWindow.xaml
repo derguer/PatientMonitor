@@ -50,9 +50,9 @@
                 <TextBox x:Name="textBoxPatientName" HorizontalAlignment="Left" Height="23" Margin="10,34,0,0" TextWrapping="Wrap" Text="Enter name here" VerticalAlignment="Top" Width="153" GotFocus="textBoxPatientName_GotFocus" LostFocus="textBoxPatientName_LostFocus" TextChanged="textBoxPatientName_TextChanged" />
 
                 <TextBlock x:Name="textBlockPatientAge" HorizontalAlignment="Left" Height="23" Margin="10,65,0,0" TextWrapping="Wrap" Text="Patient Age :" VerticalAlignment="Top" Width="120"/>
-                
+
                 <TextBox x:Name="textBoxPatientAge" HorizontalAlignment="Left" Height="23" Margin="10,89,0,0" TextWrapping="Wrap" Text="Enter age here" VerticalAlignment="Top" Width="153" GotFocus="textBoxPatientName_GotFocus" LostFocus="textBoxPatientAge_LostFocus" PreviewTextInput="textBoxPatientAge_PreviewTextInput" TextChanged="textBoxPatientAge_TextChanged"/>
-                <TextBox x:Name="textBoxPatientRoom" HorizontalAlignment="Left" Height="23" Margin="10,144,0,0" TextWrapping="Wrap" Text="Enter Room here" VerticalAlignment="Top" Width="153" />
+                <TextBox x:Name="textBoxPatientRoom" HorizontalAlignment="Left" Height="23" Margin="10,197,0,0" TextWrapping="Wrap" Text="Enter Room here" VerticalAlignment="Top" Width="153" TextChanged="textBoxPatientRoom_TextChanged" LostFocus="textBoxPatientRoom_LostFocus" GotFocus="textBoxPatientRoom_GotFocus" IsEnabled="False" PreviewTextInput="textBoxPatientRoom_PreviewTextInput" />
 
             </Grid>
         </GroupBox>
@@ -81,7 +81,7 @@
                 <Button x:Name="buttonPrev" Content="prev" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Width="74" FontSize="16" IsEnabled="False" Click="buttonPrev_Click"/>
                 <Button x:Name="buttonNext" Content="next" Margin="260,20,86,0" VerticalAlignment="Top" FontSize="16" IsEnabled="False" Click="buttonNext_Click"/>
                 <Image x:Name="MyImage" Margin="10,-316,20,65" Grid.ColumnSpan="2" />
-               
+
                 <toolkit:Chart Title="Frequency Analysis" Height="300" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Margin="-8,72,7,-313">
                     <toolkit:LineSeries x:Name="lineSeriesFFT"
                         Title =""
@@ -110,8 +110,8 @@
 
         <CheckBox x:Name="switchParameterDatabase" Content="Toggle Switch"
           HorizontalAlignment="Left"
-          Margin="87,603,0,0"
-          VerticalAlignment="Top">
+          Margin="94,580,0,0"
+          VerticalAlignment="Top" Checked="switchParameterDatabase_Checked" Unchecked="switchParameterDatabase_Checked">
             <CheckBox.Style>
                 <Style TargetType="CheckBox">
                     <Setter Property="Template">
@@ -121,7 +121,7 @@
                                     <!-- Hintergrund (Toggle-Schiene) -->
                                     <Rectangle Width="40" Height="20" Fill="Gray" RadiusX="10" RadiusY="10" />
                                     <!-- Schalter (Thumb) -->
-                                    <Rectangle x:Name="SwitchThumb" Width="16" Height="16" Fill="White" Margin="2,2,0,0" RadiusX="8" RadiusY="8" HorizontalAlignment="Left" />
+                                    <Rectangle x:Name="SwitchThumb" Width="17" Height="17" Fill="White" Margin="2,2,0,0" RadiusX="8" RadiusY="8" HorizontalAlignment="Left" />
                                 </Grid>
                                 <ControlTemplate.Triggers>
                                     <!-- Zustand: Aktiviert -->
@@ -131,7 +131,7 @@
                                     </Trigger>
                                     <!-- Zustand: Deaktiviert -->
                                     <Trigger Property="IsChecked" Value="False">
-                                        <Setter TargetName="SwitchThumb" Property="Fill" Value="#FFE8D0D0" />
+                                        <Setter TargetName="SwitchThumb" Property="Fill" Value="White" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -141,12 +141,12 @@
             </CheckBox.Style>
         </CheckBox>
 
-        <TextBlock x:Name="textBlockSwitchParameter" HorizontalAlignment="Left" Margin="22,603,0,0" TextWrapping="Wrap" Text="Parameter" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textBlockSwitchDatabase" HorizontalAlignment="Left" Margin="137,603,0,0" TextWrapping="Wrap" Text="Database" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textBlockSwitchParameter" HorizontalAlignment="Left" Margin="30,580,0,0" TextWrapping="Wrap" Text="Parameter" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textBlockSwitchDatabase" HorizontalAlignment="Left" Margin="140,580,0,0" TextWrapping="Wrap" Text="Database" VerticalAlignment="Top"/>
         <CheckBox x:Name="switchAmbulatoryStationary" Content="Toggle Switch"
           HorizontalAlignment="Left"
-          Margin="87,633,0,0"
-          VerticalAlignment="Top" RenderTransformOrigin="2.3,-0.15">
+          Margin="96,550,0,0"
+          VerticalAlignment="Top" RenderTransformOrigin="2.3,-0.15" Checked="switchAmbulatoryStationary_Checked" Unchecked="switchAmbulatoryStationary_Unchecked">
             <CheckBox.Style>
                 <Style TargetType="CheckBox">
                     <Setter Property="Template">
@@ -156,7 +156,7 @@
                                     <!-- Hintergrund (Toggle-Schiene) -->
                                     <Rectangle Width="40" Height="20" Fill="Gray" RadiusX="10" RadiusY="10" />
                                     <!-- Schalter (Thumb) -->
-                                    <Rectangle x:Name="SwitchThumb" Width="16" Height="16" Fill="White" Margin="2,2,0,0" RadiusX="8" RadiusY="8" HorizontalAlignment="Left" />
+                                    <Rectangle x:Name="SwitchThumb" Width="17" Height="17" Fill="White" Margin="2,2,0,0" RadiusX="8" RadiusY="8" HorizontalAlignment="Left" />
                                 </Grid>
                                 <ControlTemplate.Triggers>
                                     <!-- Zustand: Aktiviert -->
@@ -166,7 +166,7 @@
                                     </Trigger>
                                     <!-- Zustand: Deaktiviert -->
                                     <Trigger Property="IsChecked" Value="False">
-                                        <Setter TargetName="SwitchThumb" Property="Fill" Value="#FFE8D0D0" />
+                                        <Setter TargetName="SwitchThumb" Property="Fill" Value="White" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -175,9 +175,9 @@
                 </Style>
             </CheckBox.Style>
         </CheckBox>
-        <TextBlock x:Name="textBlockSwitchAmbulatory" HorizontalAlignment="Left" Margin="23,632,0,0" TextWrapping="Wrap" Text="Ambulatory" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textBlockSwitchStationary" HorizontalAlignment="Left" Margin="137,633,0,0" TextWrapping="Wrap" Text="Stationary" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textBlockRoom" HorizontalAlignment="Left" Margin="30,548,0,0" TextWrapping="Wrap" Text="Room :" VerticalAlignment="Top" FontSize="16"/>
+        <TextBlock x:Name="textBlockSwitchAmbulatory" HorizontalAlignment="Left" Margin="30,550,0,0" TextWrapping="Wrap" Text="Ambulatory" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textBlockSwitchStationary" HorizontalAlignment="Left" Margin="140,550,0,0" TextWrapping="Wrap" Text="Stationary" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textBlockRoom" HorizontalAlignment="Left" Margin="30,600,0,0" TextWrapping="Wrap" Text="Room :" VerticalAlignment="Top" FontSize="16"/>
         <TextBlock x:Name="textBlockClinic" HorizontalAlignment="Left" Margin="220,499,0,0" TextWrapping="Wrap" Text="Clinic :" VerticalAlignment="Top" FontSize="16"/>
 
         <ComboBox x:Name="comboBoxClinic" HorizontalAlignment="Left" Margin="220,521,0,0" VerticalAlignment="Top" Width="120">
@@ -190,8 +190,23 @@
             <ComboBoxItem Content="Oftalmology"/>
             <ComboBoxItem Content="Pediatrics"/>
         </ComboBox>
-
-
+        <DataGrid x:Name="patientDataGrid"
+          HorizontalAlignment="Left"
+          Height="400"
+          Margin="-3,0,0,0"
+          VerticalAlignment="Top"
+          Width="808"
+          AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <!-- Spaltendefinitionen -->
+                <DataGridTextColumn Header="Name" Binding="{Binding PatientName}" Width="*"/>
+                <DataGridTextColumn Header="Age" Binding="{Binding Age}" Width="Auto"/>
+                <DataGridTextColumn Header="Clinic" Binding="{Binding Clinic}" Width="Auto"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="Auto"/>
+                <DataGridTextColumn Header="Room" Binding="{Binding Room}" />
+                <DataGridTextColumn Header="Date" Binding="{Binding DateOfStudy}" Width="Auto"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
 
     </Grid>

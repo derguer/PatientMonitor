@@ -23,9 +23,13 @@ namespace PatientMonitor
 
         private int age;
         const int maxSamples = 1024;
-        
 
 
+
+
+        // Andere Eigenschaften ...
+        public string Type { get; set; } // Typ des Patienten (Ambulatory/Stationary)
+        public string Room { get; set; } = "No Room";
 
         public int Age { get { return age; } set { age = value; } }
         public string PatientName { get {return patientName; } set {patientName=value; } }
@@ -38,6 +42,8 @@ namespace PatientMonitor
             emg = new  EMG(amplitude, frequency, harmonics);
             eeg = new  EEG(amplitude, frequency, harmonics);
             resp = new Resp(amplitude, frequency, harmonics);
+           
+
             mRImages = new MRImages();
             
         }

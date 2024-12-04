@@ -8,29 +8,20 @@ namespace PatientMonitor
 {
      class Stationary : Patient 
     {
-        private int roomNumber;
 
-        // Property for roomNumber
-        public int RoomNumber
-        {
-            get { return roomNumber; }
-            set { roomNumber = value; }
-        }
-
-        // Constructor
-        // Constructor: Extends the Patient constructor
+        public int RoomNumber { get; set; }
         public Stationary(string patientName, int age, DateTime dateOfStudy, double amplitude, double frequency, int harmonics, MonitorConstants.clinic clinic, int roomNumber)
-            : base(patientName, age, dateOfStudy, amplitude, frequency, harmonics, clinic) // Call base class constructor
+             : base(patientName, age, dateOfStudy, amplitude, frequency, harmonics, clinic) // Call base class constructor
         {
-            this.roomNumber = roomNumber; // Initialize additional field
+            this.RoomNumber = roomNumber; // Initialize additional field
+            this.Room = roomNumber.ToString();
         }
 
         // Overloaded constructor for cases with fewer parameters
         public Stationary(string patientName, int age, DateTime dateOfStudy, int roomNumber)
             : base(patientName, age, dateOfStudy) // Call base class constructor
         {
-            this.roomNumber = roomNumber; // Initialize additional field
+            this.RoomNumber = roomNumber; // Initialize additional field
         }
-
     }
 }

@@ -34,7 +34,8 @@ namespace PatientMonitor
 
         private int index;
         private int lastPatientAge;
-        private int lastHarmonics, lastlastHarmonics, lastClinic;
+        private int lastRoom;
+        private int lastHarmonics, lastlastHarmonics;
         private const int sampleSize = 512; // FFT dimension
 
         private bool lastPatient = false;
@@ -73,6 +74,7 @@ namespace PatientMonitor
             dataPointsTime = new ObservableCollection<KeyValuePair<int, double>>();
             dataPointsFrequency = new ObservableCollection<KeyValuePair<int, double>>();
             lineSeriesECG.ItemsSource = dataPointsTime; // Bind the series to the data points
+            patientDataGrid.Visibility = switchParameterDatabase.IsChecked == false ? Visibility.Hidden : Visibility.Visible;
 
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(1); // Set timer to tick every second
@@ -149,40 +151,104 @@ namespace PatientMonitor
 
         private void buttonCreatePatient_Click(object sender, RoutedEventArgs e)
         {
-
             bool isAgeValid = int.TryParse(textBoxPatientAge.Text, out int patientAge);
-
-            bool isNameValid = textBoxPatientName.Text != "Enter name here" && !string.IsNullOrWhiteSpace(textBoxPatientName.Text);
-
+            bool isNameValid = !string.IsNullOrWhiteSpace(textBoxPatientName.Text);
             bool isDateSelected = datePickerDate.SelectedDate.HasValue;
-
             bool isRoomValid = int.TryParse(textBoxPatientRoom.Text, out int patientRoom);
 
+            if (!isRoomValid) patientRoom = 0; // Standardwert für Raum, falls ungültig
 
-            if (!isRoomValid) patientRoom = 0;
-            if (!isNameValid) MessageBox.Show("Name is not Valid!");
-            if (!isAgeValid) MessageBox.Show("Age is not Valid!");
-            if (!isDateSelected) MessageBox.Show("Date is not Valid!");
+            if (!isNameValid) MessageBox.Show("Name is not valid!");
+            if (!isAgeValid) MessageBox.Show("Age is not valid!");
+            if (!isDateSelected) MessageBox.Show("Date is not valid!");
 
             if (isNameValid && isAgeValid && isDateSelected)
             {
-                // Konvertiere den Index in das Enum
-                MonitorConstants.clinic selectedClinic = (MonitorConstants.clinic)lastClinic;
+                MonitorConstants.clinic selectedClinic = (MonitorConstants.clinic)comboBoxClinic.SelectedIndex;
+                DateTime dateTime = datePickerDate.SelectedDate.Value;
 
-                //lastPatientName = textBlockPatientName.Text;
-                patient = new Patient(lastPatientName, lastPatientAge, dateTime, ampValue, lastFrequency, lastHarmonics, selectedClinic);
-                
-                lastPatient = true;
+                // Sicherstellen, dass Frequenz und Amplitude korrekt erfasst werden
+                double.TryParse(textBoxFrequencyValue.Text, out double frequency);
+                double amplitude = sliderAmplitudeValue.Value;
+
+                Debug.WriteLine($"Creating Patient: Amplitude={amplitude}, Frequency={frequency}");
+
+                if (switchAmbulatoryStationary.IsChecked == true) // Stationary
+                {
+                    if (patientRoom > 0)
+                    {
+                        stationary = new Stationary(
+                            textBoxPatientName.Text,
+                            patientAge,
+                            dateTime,
+                            amplitude, // Übergebe Amplitude
+                            frequency, // Übergebe Frequenz
+                            lastHarmonics,
+                            selectedClinic,
+                            patientRoom
+                        )
+                        {
+                            Type = "Stationary"
+                        };
+                        patient = stationary;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Room number is required for Stationary patients.");
+                        return;
+                    }
+                }
+                else // Ambulatory
+                {
+                    patient = new Patient(
+                        textBoxPatientName.Text,
+                        patientAge,
+                        dateTime,
+                        amplitude, // Übergebe Amplitude
+                        frequency, // Übergebe Frequenz
+                        lastHarmonics,
+                        selectedClinic
+                    )
+                    {
+                        Type = "Ambulatory",
+                        Room = "No Room" // Standardwert für Ambulatory
+                    };
+                }
+
+                // Füge den Patienten der Datenbank hinzu
+                database.AddPatient(patient);
+
+                // Aktualisiere das DataGrid
+                patientDataGrid.ItemsSource = null; // Setze die Quelle zurück
+                patientDataGrid.ItemsSource = database.GetPatients(); // Aktualisiere mit neuer Liste
+
+                // Aktiviere weitere Buttons
                 buttonUpdatePatient.IsEnabled = true;
                 buttonParameter.IsEnabled = true;
 
-                MessageBox.Show("Patient was created!"); 
+                MessageBox.Show("Patient was created!");
             }
         }
+
+
 
         private void buttonQuit_Click(object sender, RoutedEventArgs e)
         {
             timer.Stop();
+            sliderAmplitudeValue.IsEnabled = false;
+            textBoxFrequencyValue.IsEnabled = false;
+            comboBoxHarmonics.IsEnabled = false;
+            comboBoxParameter.IsEnabled = false;
+
+            //Image Buttons
+            buttonPrev.IsEnabled = false;
+            buttonNext.IsEnabled = false;
+            buttonLoadImage.IsEnabled = false;
+
+            //Alarm
+            textBoxHightAlarm.IsEnabled = false;
+            textBoxLowAlarm.IsEnabled = false;
+            buttonFFT.IsEnabled = false;
         }
 
         private void buttonParameter_Click(object sender, RoutedEventArgs e)
@@ -656,11 +722,62 @@ namespace PatientMonitor
 
         }
 
-        private void toggleButton_Checked(object sender, RoutedEventArgs e)
+        private void textBoxPatientRoom_TextChanged(object sender, TextChangedEventArgs e)
         {
-            MessageBox.Show("Hallo");
+                int.TryParse(textBoxPatientRoom.Text, out int parsedage);
+                lastRoom = parsedage;
+
         }
 
+        private void textBoxPatientRoom_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox && string.IsNullOrEmpty(textBox.Text))
+            {
+                textBox.Text = "Enter Room number";
+                textBox.Foreground = Brushes.Red;
+            }
+        }
+
+        private void textBoxPatientRoom_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                textBox.Clear();
+                textBox.Foreground = Brushes.Black;
+            }
+        }
+
+ 
+
+        private void textBoxPatientRoom_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !int.TryParse(e.Text, out _);
+        }
+
+        private void switchAmbulatoryStationary_Checked(object sender, RoutedEventArgs e)
+        {
+            textBoxPatientRoom.IsEnabled = true;
+        }
+
+        private void switchAmbulatoryStationary_Unchecked(object sender, RoutedEventArgs e)
+        {
+            textBoxPatientRoom.Text = "No Room";
+            textBoxPatientRoom.IsEnabled = false;
+        }
+
+        private void switchParameterDatabase_Checked(object sender, RoutedEventArgs e)
+        {
+            if (switchParameterDatabase.IsChecked == false)
+            {
+                // `switchParameterDatabase` ist aktiviert -> Verstecke das DataGrid
+                patientDataGrid.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                // `switchParameterDatabase` ist deaktiviert -> Zeige das DataGrid
+                patientDataGrid.Visibility = Visibility.Visible;
+            }
+        }
 
         private void comboBoxHarmonics_deaktivation(bool ein_oderAus)
         {
