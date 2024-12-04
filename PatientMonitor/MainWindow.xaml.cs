@@ -34,7 +34,7 @@ namespace PatientMonitor
 
         private int index;
         private int lastPatientAge;
-        private int lastHarmonics, lastlastHarmonics;
+        private int lastHarmonics, lastlastHarmonics, lastClinic;
         private const int sampleSize = 512; // FFT dimension
 
         private bool lastPatient = false;
@@ -60,12 +60,16 @@ namespace PatientMonitor
             MonitorConstants.Parameter.Resp
         };
 
+        Stationary stationary;
+        Database database;
+
         private string lastPatientName = "";
 
 
         public MainWindow()
         {
             InitializeComponent();
+            database = new Database();
             dataPointsTime = new ObservableCollection<KeyValuePair<int, double>>();
             dataPointsFrequency = new ObservableCollection<KeyValuePair<int, double>>();
             lineSeriesECG.ItemsSource = dataPointsTime; // Bind the series to the data points
@@ -152,21 +156,27 @@ namespace PatientMonitor
 
             bool isDateSelected = datePickerDate.SelectedDate.HasValue;
 
+            bool isRoomValid = int.TryParse(textBoxPatientRoom.Text, out int patientRoom);
+
+
+            if (!isRoomValid) patientRoom = 0;
             if (!isNameValid) MessageBox.Show("Name is not Valid!");
             if (!isAgeValid) MessageBox.Show("Age is not Valid!");
             if (!isDateSelected) MessageBox.Show("Date is not Valid!");
 
             if (isNameValid && isAgeValid && isDateSelected)
             {
+                // Konvertiere den Index in das Enum
+                MonitorConstants.clinic selectedClinic = (MonitorConstants.clinic)lastClinic;
+
                 //lastPatientName = textBlockPatientName.Text;
-                patient = new Patient(lastPatientName, lastPatientAge, dateTime, ampValue, lastFrequency, lastHarmonics);
+                patient = new Patient(lastPatientName, lastPatientAge, dateTime, ampValue, lastFrequency, lastHarmonics, selectedClinic);
                 
                 lastPatient = true;
                 buttonUpdatePatient.IsEnabled = true;
                 buttonParameter.IsEnabled = true;
 
-                MessageBox.Show("Patient was created!");
-                //buttonStartSimulation.IsEnabled = true;
+                MessageBox.Show("Patient was created!"); 
             }
         }
 
@@ -640,6 +650,17 @@ namespace PatientMonitor
         {
             e.Handled = !int.TryParse(e.Text, out _); // Blockiere nicht-numerische Eingaben
         }
+
+        private void ProgressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+        }
+
+        private void toggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Hallo");
+        }
+
 
         private void comboBoxHarmonics_deaktivation(bool ein_oderAus)
         {

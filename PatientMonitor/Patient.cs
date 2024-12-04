@@ -17,11 +17,13 @@ namespace PatientMonitor
 
         private string patientName;
         private DateTime dateOfStudy;
+        private MonitorConstants.clinic clinic;
 
         List<double> sampleList = new List<double>(maxSamples);
 
         private int age;
         const int maxSamples = 1024;
+        
 
 
 
@@ -29,14 +31,15 @@ namespace PatientMonitor
         public string PatientName { get {return patientName; } set {patientName=value; } }
         public DateTime DateOfStudy { get {return dateOfStudy; } set {dateOfStudy=value; } }
 
-        public Patient(string patientName, int age, DateTime dateOfStudy, double amplitude, double frequency, int harmonics)
+        public Patient(string patientName, int age, DateTime dateOfStudy, double amplitude, double frequency, int harmonics, MonitorConstants.clinic clinic)
         {
-            this.patientName = patientName; this.age = age; this.dateOfStudy = dateOfStudy;
+            this.patientName = patientName; this.age = age; this.dateOfStudy = dateOfStudy; this.clinic = clinic;
             ecg = new  ECG(amplitude, frequency, harmonics);
             emg = new  EMG(amplitude, frequency, harmonics);
             eeg = new  EEG(amplitude, frequency, harmonics);
             resp = new Resp(amplitude, frequency, harmonics);
             mRImages = new MRImages();
+            
         }
         public Patient(string patientName, int age, DateTime dateOfStudy)
         {
@@ -100,6 +103,12 @@ namespace PatientMonitor
         public List<double> SampleList
         {
             get { return sampleList; }
+        }
+        
+        public MonitorConstants.clinic Clinic
+        {
+            get { return clinic; }
+            set { clinic = value; }
         }
 
 
