@@ -128,6 +128,7 @@ namespace PatientMonitor
             {
                 case (MonitorConstants.Parameter.ECG):
                     if (lastPatient) { patient.ECGAmplitude = sliderAmplitudeValue.Value;
+                       
                     }
                     break;
                 case (MonitorConstants.Parameter.EMG):
@@ -181,8 +182,8 @@ namespace PatientMonitor
                             textBoxPatientName.Text,
                             patientAge,
                             dateTime,
-                            amplitude, // Übergebe Amplitude
-                            frequency, // Übergebe Frequenz
+                            ampValue, // Übergebe Amplitude
+                            lastFrequency, // Übergebe Frequenz
                             lastHarmonics,
                             selectedClinic,
                             patientRoom
@@ -204,8 +205,8 @@ namespace PatientMonitor
                         textBoxPatientName.Text,
                         patientAge,
                         dateTime,
-                        amplitude, // Übergebe Amplitude
-                        frequency, // Übergebe Frequenz
+                        ampValue, // Übergebe Amplitude
+                        lastFrequency, // Übergebe Frequenz
                         lastHarmonics,
                         selectedClinic
                     )
@@ -249,6 +250,7 @@ namespace PatientMonitor
             textBoxHightAlarm.IsEnabled = false;
             textBoxLowAlarm.IsEnabled = false;
             buttonFFT.IsEnabled = false;
+            
         }
 
         private void buttonParameter_Click(object sender, RoutedEventArgs e)
@@ -259,6 +261,7 @@ namespace PatientMonitor
             textBoxFrequencyValue.IsEnabled = true;
             comboBoxHarmonics.IsEnabled = true;
             comboBoxParameter.IsEnabled = true;
+            lastPatient = true;
 
             //Image Buttons
             buttonPrev.IsEnabled = true;
