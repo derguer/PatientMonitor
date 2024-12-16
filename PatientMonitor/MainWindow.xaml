@@ -44,8 +44,8 @@
         <GroupBox x:Name="groupBoxPatient" Header="Input Patient" Width="380" Height="250" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="14,0,0,60" FontSize="16">
             <Grid>
                 <DatePicker x:Name="datePickerDate" HorizontalAlignment="Center" Margin="198,32,10,164" SelectedDateChanged="datePickerDate_SelectedDateChanged" />
-                <Button x:Name="buttonCreatePatient" Content="Create Patient" Width="120" Margin="223,156,25,36" Height="30" Click="buttonCreatePatient_Click"/>
-                <Button x:Name="buttonUpdatePatient" Content="Update Patient" Width="120" Margin="223,191,25,1" Height="30" IsEnabled="False" Click="buttonUpdatePatient_Click"/>
+                <Button x:Name="buttonCreatePatient" Content="Create Patient" Width="120" Margin="198,190,50,2" Height="30" Click="buttonCreatePatient_Click"/>
+                <Button x:Name="buttonLoadDatabase" Content="Load Database" Width="120" Margin="6,250,242,-54" Click="buttonLoadDatabase_Click" Height="25"/>
                 <TextBlock x:Name="textBlockPatientName" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" Text="Patient Name :" VerticalAlignment="Top" Width="120"/>
                 <TextBox x:Name="textBoxPatientName" HorizontalAlignment="Left" Height="23" Margin="10,34,0,0" TextWrapping="Wrap" Text="Enter name here" VerticalAlignment="Top" Width="153" GotFocus="textBoxPatientName_GotFocus" LostFocus="textBoxPatientName_LostFocus" TextChanged="textBoxPatientName_TextChanged" />
 
@@ -53,6 +53,7 @@
 
                 <TextBox x:Name="textBoxPatientAge" HorizontalAlignment="Left" Height="23" Margin="10,89,0,0" TextWrapping="Wrap" Text="Enter age here" VerticalAlignment="Top" Width="153" GotFocus="textBoxPatientName_GotFocus" LostFocus="textBoxPatientAge_LostFocus" PreviewTextInput="textBoxPatientAge_PreviewTextInput" TextChanged="textBoxPatientAge_TextChanged"/>
                 <TextBox x:Name="textBoxPatientRoom" HorizontalAlignment="Left" Height="23" Margin="10,197,0,0" TextWrapping="Wrap" Text="Enter Room here" VerticalAlignment="Top" Width="153" TextChanged="textBoxPatientRoom_TextChanged" LostFocus="textBoxPatientRoom_LostFocus" GotFocus="textBoxPatientRoom_GotFocus" IsEnabled="False" PreviewTextInput="textBoxPatientRoom_PreviewTextInput" />
+                <Button x:Name="buttonSafeDatabase" Content="Safe Database" Margin="152,250,96,-54" Width="120" Height="25" FontSize="16" Click="buttonSafeDatabase_Click" IsEnabled="False"/>
 
             </Grid>
         </GroupBox>
@@ -207,6 +208,14 @@
                 <DataGridTextColumn Header="Date" Binding="{Binding DateOfStudy}" Width="Auto"/>
             </DataGrid.Columns>
         </DataGrid>
+        <ComboBox x:Name="comboBoxSort" HorizontalAlignment="Left" Margin="220,550,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="comboBoxSort_SelectionChanged">
+            <ComboBoxItem Content="Name" />
+            <ComboBoxItem Content="Age" />
+            <ComboBoxItem Content="Clinic" />
+            <ComboBoxItem Content="Ambulatory" />
+            <ComboBoxItem Content="Stationary" />
+        </ComboBox>
+
 
 
     </Grid>

@@ -34,10 +34,16 @@ namespace PatientMonitor
         public int Age { get { return age; } set { age = value; } }
         public string PatientName { get {return patientName; } set {patientName=value; } }
         public DateTime DateOfStudy { get {return dateOfStudy; } set {dateOfStudy=value; } }
+        public bool Ambulatory { get; set; }
+        public bool Stationary { get; set; }
 
         public Patient(string patientName, int age, DateTime dateOfStudy, double amplitude, double frequency, int harmonics, MonitorConstants.clinic clinic)
         {
-            this.patientName = patientName; this.age = age; this.dateOfStudy = dateOfStudy; this.clinic = clinic;
+            this.patientName = patientName;
+            this.age = age;
+            this.dateOfStudy = dateOfStudy;
+            this.clinic = clinic;
+
             ecg = new  ECG(amplitude, frequency, harmonics);
             emg = new  EMG(amplitude, frequency, harmonics);
             eeg = new  EEG(amplitude, frequency, harmonics);
@@ -49,8 +55,11 @@ namespace PatientMonitor
         }
         public Patient(string patientName, int age, DateTime dateOfStudy)
         {
-            this.patientName = patientName; this.age = age; this.dateOfStudy = dateOfStudy;
-            ecg  = new ECG();
+            this.patientName = patientName;
+            this.age = age;
+            this.dateOfStudy = dateOfStudy;
+
+            ecg = new ECG();
             emg  = new EMG();
             eeg  = new EEG();
             resp = new Resp();

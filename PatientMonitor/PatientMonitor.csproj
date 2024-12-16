@@ -67,6 +67,7 @@
     <Compile Include="Database.cs" />
     <Compile Include="IPhysioFunctions.cs" />
     <Compile Include="MRImages.cs" />
+    <Compile Include="PatientComparer.cs" />
     <Compile Include="PhysioParameter.cs" />
     <Compile Include="Respi.cs" />
     <Compile Include="Spektrum.cs" />

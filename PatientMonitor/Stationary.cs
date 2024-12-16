@@ -6,22 +6,25 @@ using System.Threading.Tasks;
 
 namespace PatientMonitor
 {
-     class Stationary : Patient 
+    class Stationary : Patient
     {
-
         public int RoomNumber { get; set; }
+
+        // Voller Konstruktor mit DateTime
         public Stationary(string patientName, int age, DateTime dateOfStudy, double amplitude, double frequency, int harmonics, MonitorConstants.clinic clinic, int roomNumber)
-             : base(patientName, age, dateOfStudy, amplitude, frequency, harmonics, clinic) // Call base class constructor
+            : base(patientName, age, dateOfStudy, amplitude, frequency, harmonics, clinic)
         {
-            this.RoomNumber = roomNumber; // Initialize additional field
-            this.Room = roomNumber.ToString();
+            this.RoomNumber = roomNumber;
+            this.Room = roomNumber.ToString(); // nutzt die vererbte Property "Room" aus Patient
         }
 
-        // Overloaded constructor for cases with fewer parameters
+        // Überladener Konstruktor für weniger Parameter, z.B. ohne Amplitude/Frequency/Harmonics
         public Stationary(string patientName, int age, DateTime dateOfStudy, int roomNumber)
-            : base(patientName, age, dateOfStudy) // Call base class constructor
+            : base(patientName, age, dateOfStudy)
         {
-            this.RoomNumber = roomNumber; // Initialize additional field
+            this.RoomNumber = roomNumber;
+            // Room kann hier ebenfalls gesetzt werden, wenn gewünscht:
+            this.Room = roomNumber.ToString();
         }
     }
 }

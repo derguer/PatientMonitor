@@ -156,6 +156,7 @@ namespace PatientMonitor
             bool isNameValid = !string.IsNullOrWhiteSpace(textBoxPatientName.Text);
             bool isDateSelected = datePickerDate.SelectedDate.HasValue;
             bool isRoomValid = int.TryParse(textBoxPatientRoom.Text, out int patientRoom);
+            
 
             if (!isRoomValid) patientRoom = 0; // Standardwert für Raum, falls ungültig
 
@@ -224,8 +225,9 @@ namespace PatientMonitor
                 patientDataGrid.ItemsSource = database.GetPatients(); // Aktualisiere mit neuer Liste
 
                 // Aktiviere weitere Buttons
-                buttonUpdatePatient.IsEnabled = true;
+                
                 buttonParameter.IsEnabled = true;
+                buttonSafeDatabase.IsEnabled = true;
 
                 MessageBox.Show("Patient was created!");
             }
@@ -272,6 +274,7 @@ namespace PatientMonitor
             textBoxHightAlarm.IsEnabled = true;
             textBoxLowAlarm.IsEnabled = true;
             buttonFFT.IsEnabled = true;
+            
 
 
         }
@@ -323,9 +326,23 @@ namespace PatientMonitor
             }
         }
 
-        private void buttonUpdatePatient_Click(object sender, RoutedEventArgs e)
+        private void buttonLoadDatabase_Click(object sender, RoutedEventArgs e)
         {
-            resetParameters();
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Patient Database Files|*.bin",
+                Title = "Load Patient Database"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string path = openFileDialog.FileName;
+                // Datenbank laden
+                database.OpenData(path);
+                MessageBox.Show("Database loaded successfully!", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Anschließend die Anzeige aktualisieren
+                displayDatabase();
+            }
         }
 
         private void ComboBoxHarmonics_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -779,6 +796,36 @@ namespace PatientMonitor
             {
                 // `switchParameterDatabase` ist deaktiviert -> Zeige das DataGrid
                 patientDataGrid.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void comboBoxSort_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PatientComparer pc = new PatientComparer();
+            pc.CA = (MonitorConstants.compareAfter)comboBoxSort.SelectedIndex;
+            database.Data.Sort(pc);
+            displayDatabase();
+        }
+        private void displayDatabase()
+        {
+            // Angenommen, du hast ein DataGrid namens patientDataGrid:
+            patientDataGrid.ItemsSource = null;
+            patientDataGrid.ItemsSource = database.Data;
+        }
+
+        private void buttonSafeDatabase_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Patient Database Files|*.bin",
+                Title = "Save Patient Database"
+            };
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string path = saveFileDialog.FileName;
+                // Datenbank speichern
+                database.SaveData(path);
+                MessageBox.Show("Database saved successfully!", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

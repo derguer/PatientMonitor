@@ -26,5 +26,13 @@ namespace PatientMonitor
             Oftalmology = 6,
             Pediatrics = 7,
         }
+        public enum compareAfter
+        {
+            Name = 0,
+            Age = 1,
+            Clinic = 2,
+            Ambulatory = 3,
+            Stationary = 4,
+        }
     }
 }
