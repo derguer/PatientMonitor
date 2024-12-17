@@ -197,17 +197,30 @@
           Margin="-3,0,0,0"
           VerticalAlignment="Top"
           Width="808"
-          AutoGenerateColumns="False">
+          AutoGenerateColumns="False" 
+          SelectionChanged="patientDataGrid_SelectionChanged" MouseDoubleClick="patientDataGrid_MouseDoubleClick">
+
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="LightBlue"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+
             <DataGrid.Columns>
                 <!-- Spaltendefinitionen -->
                 <DataGridTextColumn Header="Name" Binding="{Binding PatientName}" Width="*"/>
                 <DataGridTextColumn Header="Age" Binding="{Binding Age}" Width="Auto"/>
                 <DataGridTextColumn Header="Clinic" Binding="{Binding Clinic}" Width="Auto"/>
                 <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="Auto"/>
-                <DataGridTextColumn Header="Room" Binding="{Binding Room}" />
+                <DataGridTextColumn Header="Room" Binding="{Binding Room}"/>
                 <DataGridTextColumn Header="Date" Binding="{Binding DateOfStudy}" Width="Auto"/>
             </DataGrid.Columns>
         </DataGrid>
+
         <ComboBox x:Name="comboBoxSort" HorizontalAlignment="Left" Margin="220,550,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="comboBoxSort_SelectionChanged">
             <ComboBoxItem Content="Name" />
             <ComboBoxItem Content="Age" />

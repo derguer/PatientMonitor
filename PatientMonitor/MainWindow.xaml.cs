@@ -342,6 +342,13 @@ namespace PatientMonitor
 
                 // Anschließend die Anzeige aktualisieren
                 displayDatabase();
+                var patients = database.GetPatients();
+                if (patients != null && patients.Count > 0)
+                {
+                    patient = patients[patients.Count - 1]; // Letzter Patient in der Liste wird "aktiv"
+                    DisplayPatientInInputSection(patient);
+                    
+                }
             }
         }
 
@@ -826,6 +833,49 @@ namespace PatientMonitor
                 // Datenbank speichern
                 database.SaveData(path);
                 MessageBox.Show("Database saved successfully!", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void patientDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (patientDataGrid.SelectedItem is Patient selectedPatient)
+            {
+                // Aktiven Patienten updaten
+                patient = selectedPatient;
+
+                // Patienten-Infos im Input-Bereich aktualisieren
+                DisplayPatientInInputSection(patient);
+
+                // Falls nötig: Parameter neu laden, z.B. Frequenz, Amplitude etc.
+                // UpdateParameterUI(patient);
+
+                // Hintergrundfarbe der aktiven Zeile ändern (optional)
+                // Dies kann man z.B. über ein Style-Trigger lösen.
+                // Für einen schnellen Hack: Den DataGrid Refreshen, oder ein bestimmtes Markierungsverfahren vornehmen.
+            }
+        }
+        private void DisplayPatientInInputSection(Patient p)
+        {
+            if (p == null) return;
+            textBoxPatientName.Text = p.PatientName;
+            textBoxPatientAge.Text = p.Age.ToString();
+            datePickerDate.SelectedDate = p.DateOfStudy;
+            comboBoxClinic.SelectedIndex = (int)p.Clinic;
+            textBoxPatientRoom.Text = p is Stationary s ? s.RoomNumber.ToString() : "No Room";
+
+            // Ambulatory/Stationary setzen
+            switchAmbulatoryStationary.IsChecked = p is Stationary;
+
+            // Parameterfelder aktualisieren (falls nötig)
+            // ...
+        }
+
+        private void patientDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (patientDataGrid.SelectedItem is Patient selectedPatient)
+            {
+                patient = selectedPatient;
+                DisplayPatientInInputSection(patient);
             }
         }
 
