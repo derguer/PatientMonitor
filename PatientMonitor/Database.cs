@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace PatientMonitor
 {
@@ -13,12 +14,14 @@ namespace PatientMonitor
         const int maxActivePatients = 100;
 
         // Liste zur Speicherung der Patienten
-        private List<Patient> data = new List<Patient>();
+        //private List<Patient> data = new List<Patient>();
+        private ObservableCollection<Patient> data = new ObservableCollection<Patient>();
 
-        public List<Patient> Data
+        public ObservableCollection<Patient> Data
         {
             get { return data; }
         }
+
 
         // Methode zum Hinzufügen eines Patienten
         public void AddPatient(Patient patient)
@@ -36,7 +39,8 @@ namespace PatientMonitor
         // Methode zum Abrufen aller Patienten
         public List<Patient> GetPatients()
         {
-            return new List<Patient>(data); // Gibt eine Kopie der Liste zurück
+
+            return data.ToList();
         }
 
         // Optionale Methode: Patientenanzahl abrufen
@@ -59,12 +63,11 @@ namespace PatientMonitor
         }
         public void SaveData(string dataPath)
         {
-            int patientCount = 0;
+            int patientCount = data.Count;
 
             using (Stream ausgabe = File.Create(dataPath))
             {
                 BinaryWriter writer = new BinaryWriter(ausgabe);
-                patientCount = data.Count;
                 writer.Write(patientCount);
                 foreach (Patient patient in data)
                 {
@@ -98,8 +101,7 @@ namespace PatientMonitor
                     writer.Write(patient.RespHarmonics);
                     if (patient is Stationary)
                     {
-                        Stationary stationary;
-                        stationary = patient as Stationary;
+                        Stationary stationary = patient as Stationary;
                         writer.Write(stationary.RoomNumber);
                     }
                 }
@@ -107,155 +109,117 @@ namespace PatientMonitor
         }
         public void OpenData(string dataPath)
         {
-            BinaryReader reader;
-            int patientCount = 0;
-            // Deklaration vorab, damit wir sie nach dem if/else verwenden können
-            Patient patient;
-
-            string patientName = "";
-            int age = 0;
-            string dateOfStudyString;  // erst als String
-            MonitorConstants.clinic clinic;
-            double ecgAmplitude;
-            double ecgFrequency;
-            double ecgHighAlarm;
-            double ecgLowAlarm;
-            double eegAmplitude;
-            double eegFrequency;
-            double eegHighAlarm;
-            double eegLowAlarm;
-            double emgAmplitude;
-            double emgFrequency;
-            double emgHighAlarm;
-            double emgLowAlarm;
-            double respAmplitude;
-            double respFrequency;
-            double respHighAlarm;
-            double respLowAlarm;
-            int ecgHarmonics;
-            int eegHarmonics;
-            int emgHarmonics;
-            int respHarmonics;
-            bool isStationary = false;
-            int roomNum;
-
             using (Stream eingabe = File.OpenRead(dataPath))
             {
-                reader = new BinaryReader(eingabe);
-                data.Clear();
-                patientCount = reader.ReadInt32();
+                BinaryReader reader = new BinaryReader(eingabe);
+                data.Clear(); // ObservableCollection wird geleert
+                int patientCount = reader.ReadInt32();
+
                 for (int i = 0; i < patientCount; i++)
                 {
-                    isStationary = reader.ReadBoolean();
-                    patientName = reader.ReadString();
-                    age = reader.ReadInt32();
+                    bool isStationary = reader.ReadBoolean();
+                    string patientName = reader.ReadString();
+                    int age = reader.ReadInt32();
+                    DateTime dateOfStudy = DateTime.Parse(reader.ReadString());
+                    MonitorConstants.clinic clinic = (MonitorConstants.clinic)reader.ReadInt32();
 
-                    // DateTime parsen
-                    dateOfStudyString = reader.ReadString();
-                    DateTime dateOfStudy = DateTime.Parse(dateOfStudyString);
+                    double ecgAmplitude = reader.ReadDouble();
+                    double ecgFrequency = reader.ReadDouble();
+                    double ecgHighAlarm = reader.ReadDouble();
+                    double ecgLowAlarm = reader.ReadDouble();
+                    int ecgHarmonics = reader.ReadInt32();
 
-                    clinic = (MonitorConstants.clinic)reader.ReadInt32();
-                    ecgAmplitude = reader.ReadDouble();
-                    ecgFrequency = reader.ReadDouble();
-                    ecgHighAlarm = reader.ReadDouble();
-                    ecgLowAlarm = reader.ReadDouble();
-                    ecgHarmonics = reader.ReadInt32();
+                    double eegAmplitude = reader.ReadDouble();
+                    double eegFrequency = reader.ReadDouble();
+                    double eegHighAlarm = reader.ReadDouble();
+                    double eegLowAlarm = reader.ReadDouble();
+                    int eegHarmonics = reader.ReadInt32();
 
-                    eegAmplitude = reader.ReadDouble();
-                    eegFrequency = reader.ReadDouble();
-                    eegHighAlarm = reader.ReadDouble();
-                    eegLowAlarm = reader.ReadDouble();
-                    eegHarmonics = reader.ReadInt32();
+                    double emgAmplitude = reader.ReadDouble();
+                    double emgFrequency = reader.ReadDouble();
+                    double emgHighAlarm = reader.ReadDouble();
+                    double emgLowAlarm = reader.ReadDouble();
+                    int emgHarmonics = reader.ReadInt32();
 
-                    emgAmplitude = reader.ReadDouble();
-                    emgFrequency = reader.ReadDouble();
-                    emgHighAlarm = reader.ReadDouble();
-                    emgLowAlarm = reader.ReadDouble();
-                    emgHarmonics = reader.ReadInt32();
+                    double respAmplitude = reader.ReadDouble();
+                    double respFrequency = reader.ReadDouble();
+                    double respHighAlarm = reader.ReadDouble();
+                    double respLowAlarm = reader.ReadDouble();
+                    int respHarmonics = reader.ReadInt32();
 
-                    respAmplitude = reader.ReadDouble();
-                    respFrequency = reader.ReadDouble();
-                    respHighAlarm = reader.ReadDouble();
-                    respLowAlarm = reader.ReadDouble();
-                    respHarmonics = reader.ReadInt32();
-
+                    Patient patient;
                     if (isStationary)
                     {
-                        roomNum = reader.ReadInt32();
-
-                        // Stationary-Objekt erstellen
+                        int roomNum = reader.ReadInt32();
                         Stationary stationaryPatient = new Stationary(
                             patientName,
                             age,
-                            dateOfStudy,   
+                            dateOfStudy,
                             ecgAmplitude,
                             ecgFrequency,
                             ecgHarmonics,
                             clinic,
                             roomNum
-                        );
+                        )
+                        {
+                            ECGLowAlarm = ecgLowAlarm,
+                            ECGHighAlarm = ecgHighAlarm,
+                            EEGAmplitude = eegAmplitude,
+                            EEGFrequency = eegFrequency,
+                            EEGLowAlarm = eegLowAlarm,
+                            EEGHighAlarm = eegHighAlarm,
+                            EMGAmplitude = emgAmplitude,
+                            EMGFrequency = emgFrequency,
+                            EMGLowAlarm = emgLowAlarm,
+                            EMGHighAlarm = emgHighAlarm,
+                            RespAmplitude = respAmplitude,
+                            RespFrequency = respFrequency,
+                            RespLowAlarm = respLowAlarm,
+                            RespHighAlarm = respHighAlarm,
+                            Stationary = true,
+                            Ambulatory = false,
+                            Type = "Stationary"
+                        };
 
-                        // Eigenschaften setzen
-                        stationaryPatient.ECGLowAlarm = ecgLowAlarm;
-                        stationaryPatient.ECGHighAlarm = ecgHighAlarm;
-                        stationaryPatient.EEGAmplitude = eegAmplitude;
-                        stationaryPatient.EEGFrequency = eegFrequency;
-                        stationaryPatient.EEGLowAlarm = eegLowAlarm;
-                        stationaryPatient.EEGHighAlarm = eegHighAlarm;
-                        stationaryPatient.EMGAmplitude = emgAmplitude;
-                        stationaryPatient.EMGFrequency = emgFrequency;
-                        stationaryPatient.EMGLowAlarm = emgLowAlarm;
-                        stationaryPatient.EMGHighAlarm = emgHighAlarm;
-                        stationaryPatient.RespAmplitude = respAmplitude;
-                        stationaryPatient.RespFrequency = respFrequency;
-                        stationaryPatient.RespLowAlarm = respLowAlarm;
-                        stationaryPatient.RespHighAlarm = respHighAlarm;
-                        stationaryPatient.Stationary = true;
-                        stationaryPatient.Ambulatory = false;
-                        stationaryPatient.Type = "Stationary";
-
-                        // Zu patient zuweisen
                         patient = stationaryPatient;
                     }
                     else
                     {
-                        // Ambulanter Patient
                         Patient ambPatient = new Patient(
                             patientName,
                             age,
-                            dateOfStudy,    
+                            dateOfStudy,
                             ecgAmplitude,
                             ecgFrequency,
                             ecgHarmonics,
                             clinic
-                        );
-
-                        // Eigenschaften setzen
-                        ambPatient.ECGLowAlarm = ecgLowAlarm;
-                        ambPatient.ECGHighAlarm = ecgHighAlarm;
-                        ambPatient.EEGAmplitude = eegAmplitude;
-                        ambPatient.EEGFrequency = eegFrequency;
-                        ambPatient.EEGLowAlarm = eegLowAlarm;
-                        ambPatient.EEGHighAlarm = eegHighAlarm;
-                        ambPatient.EMGAmplitude = emgAmplitude;
-                        ambPatient.EMGFrequency = emgFrequency;
-                        ambPatient.EMGLowAlarm = emgLowAlarm;
-                        ambPatient.EMGHighAlarm = emgHighAlarm;
-                        ambPatient.RespAmplitude = respAmplitude;
-                        ambPatient.RespFrequency = respFrequency;
-                        ambPatient.RespLowAlarm = respLowAlarm;
-                        ambPatient.RespHighAlarm = respHighAlarm;
-                        ambPatient.Ambulatory = true;
-                        ambPatient.Stationary = false;
-                        ambPatient.Type = "Ambulatory";
-
-                        // Zu patient zuweisen
+                        )
+                        {
+                            ECGLowAlarm = ecgLowAlarm,
+                            ECGHighAlarm = ecgHighAlarm,
+                            EEGAmplitude = eegAmplitude,
+                            EEGFrequency = eegFrequency,
+                            EEGLowAlarm = eegLowAlarm,
+                            EEGHighAlarm = eegHighAlarm,
+                            EMGAmplitude = emgAmplitude,
+                            EMGFrequency = emgFrequency,
+                            EMGLowAlarm = emgLowAlarm,
+                            EMGHighAlarm = emgHighAlarm,
+                            RespAmplitude = respAmplitude,
+                            RespFrequency = respFrequency,
+                            RespLowAlarm = respLowAlarm,
+                            RespHighAlarm = respHighAlarm,
+                            Ambulatory = true,
+                            Stationary = false,
+                            Type = "Ambulatory"
+                        };
                         patient = ambPatient;
                     }
-
-                    // Objekt zur Datenbank hinzufügen
+                    // Patient hinzufügen
                     data.Add(patient);
                 }
+                // Debugging: Anzahl der geladenen Patienten
+                System.Diagnostics.Debug.WriteLine($"Loaded {patientCount} patients.");
             }
         }
     }

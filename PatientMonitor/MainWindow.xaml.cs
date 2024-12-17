@@ -71,6 +71,7 @@ namespace PatientMonitor
         {
             InitializeComponent();
             database = new Database();
+            
             dataPointsTime = new ObservableCollection<KeyValuePair<int, double>>();
             dataPointsFrequency = new ObservableCollection<KeyValuePair<int, double>>();
             lineSeriesECG.ItemsSource = dataPointsTime; // Bind the series to the data points
@@ -79,6 +80,12 @@ namespace PatientMonitor
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(1); // Set timer to tick every second
             timer.Tick += Timer_Tick;
+
+            // Bind the DataGrid einmalig an die ObservableCollection
+            patientDataGrid.ItemsSource = database.Data;
+
+            comboBoxSort.SelectedIndex = 5;
+ 
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -336,21 +343,38 @@ namespace PatientMonitor
             if (openFileDialog.ShowDialog() == true)
             {
                 string path = openFileDialog.FileName;
-                // Datenbank laden
-                database.OpenData(path);
-                MessageBox.Show("Database loaded successfully!", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                // Anschließend die Anzeige aktualisieren
-                displayDatabase();
-                var patients = database.GetPatients();
-                if (patients != null && patients.Count > 0)
+                try
                 {
-                    patient = patients[patients.Count - 1]; // Letzter Patient in der Liste wird "aktiv"
-                    DisplayPatientInInputSection(patient);
-                    
+                    // Datenbank laden
+                    database.OpenData(path);
+                    MessageBox.Show("Database loaded successfully!", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    // Aktualisiere die DataGrid ItemsSource
+                    patientDataGrid.ItemsSource = null; // Temporär auf null setzen
+                    patientDataGrid.ItemsSource = database.Data; // Wieder binden
+
+                    // Setze den aktiven Patienten auf den letzten in der Liste
+                    if (database.Data.Count > 0)
+                    {
+                        patient = database.Data[database.Data.Count - 1]; // Letzter Patient in der Liste wird "aktiv"
+                        DisplayPatientInInputSection(patient);
+                    }
+                }
+                catch (InvalidOperationException ex)
+                {
+                    // Behandlung spezifischer Ausnahmen, z.B. maximale Kapazität überschritten
+                    MessageBox.Show($"Failed to load database: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (Exception ex)
+                {
+                    // Allgemeine Fehlerbehandlung
+                    MessageBox.Show($"An error occurred while loading the database: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
+
+
+
 
         private void ComboBoxHarmonics_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -683,7 +707,6 @@ namespace PatientMonitor
                 MessageBox.Show($"Failed to navigate to the previous image: {ex.Message}");
             }
         }
-
         private void textBoxMaxImages_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (int.TryParse(textBoxImageIndex.Text, out int newMaxImages) && newMaxImages > 0)
@@ -708,7 +731,6 @@ namespace PatientMonitor
                 textBoxImageIndex.Text = patient.MRImages.MaxImages.ToString();
             }
         }
-
         private void textBoxMaxImages_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -736,8 +758,6 @@ namespace PatientMonitor
                 }
             }
         }
-
-        
 
         private void textBoxMaxImages_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
@@ -774,8 +794,6 @@ namespace PatientMonitor
             }
         }
 
- 
-
         private void textBoxPatientRoom_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !int.TryParse(e.Text, out _);
@@ -808,16 +826,34 @@ namespace PatientMonitor
 
         private void comboBoxSort_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Stelle sicher, dass ein tatsächlicher Sortier-Index ausgewählt ist
+            if (comboBoxSort.SelectedIndex <= 0)
+                return;
+
             PatientComparer pc = new PatientComparer();
             pc.CA = (MonitorConstants.compareAfter)comboBoxSort.SelectedIndex;
-            database.Data.Sort(pc);
-            displayDatabase();
+
+            // Hole die Patienten als Liste
+            var list = database.Data.ToList();
+
+            // Sortiere die Liste mit deinem Comparer
+            list.Sort(pc);
+
+            // Leere die bestehende ObservableCollection und füge die sortierten Patienten ein
+            database.Data.Clear();
+            foreach (var p in list)
+            {
+                database.Data.Add(p);
+            }
+
+            // Das DataGrid wird automatisch aktualisiert
         }
+
         private void displayDatabase()
         {
-            // Angenommen, du hast ein DataGrid namens patientDataGrid:
-            patientDataGrid.ItemsSource = null;
-            patientDataGrid.ItemsSource = database.Data;
+            
+            //patientDataGrid.ItemsSource = null;
+            //patientDataGrid.ItemsSource = database.Data;
         }
 
         private void buttonSafeDatabase_Click(object sender, RoutedEventArgs e)
@@ -846,17 +882,18 @@ namespace PatientMonitor
                 // Patienten-Infos im Input-Bereich aktualisieren
                 DisplayPatientInInputSection(patient);
 
-                // Falls nötig: Parameter neu laden, z.B. Frequenz, Amplitude etc.
-                // UpdateParameterUI(patient);
-
-                // Hintergrundfarbe der aktiven Zeile ändern (optional)
-                // Dies kann man z.B. über ein Style-Trigger lösen.
-                // Für einen schnellen Hack: Den DataGrid Refreshen, oder ein bestimmtes Markierungsverfahren vornehmen.
             }
         }
         private void DisplayPatientInInputSection(Patient p)
         {
-            if (p == null) return;
+            if (p == null)
+            {
+                System.Diagnostics.Debug.WriteLine("DisplayPatientInInputSection: Patient is null.");
+                return;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"Displaying patient: {p.PatientName}, Age: {p.Age}");
+
             textBoxPatientName.Text = p.PatientName;
             textBoxPatientAge.Text = p.Age.ToString();
             datePickerDate.SelectedDate = p.DateOfStudy;
@@ -866,8 +903,6 @@ namespace PatientMonitor
             // Ambulatory/Stationary setzen
             switchAmbulatoryStationary.IsChecked = p is Stationary;
 
-            // Parameterfelder aktualisieren (falls nötig)
-            // ...
         }
 
         private void patientDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)

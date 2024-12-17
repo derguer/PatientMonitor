@@ -212,22 +212,31 @@
 
             <DataGrid.Columns>
                 <!-- Spaltendefinitionen -->
-                <DataGridTextColumn Header="Name" Binding="{Binding PatientName}" Width="*"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding PatientName}" Width="Auto"/>
                 <DataGridTextColumn Header="Age" Binding="{Binding Age}" Width="Auto"/>
                 <DataGridTextColumn Header="Clinic" Binding="{Binding Clinic}" Width="Auto"/>
                 <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="Auto"/>
-                <DataGridTextColumn Header="Room" Binding="{Binding Room}"/>
+                <DataGridTextColumn Header="Room" Binding="{Binding Room}" Width="Auto"/>
                 <DataGridTextColumn Header="Date" Binding="{Binding DateOfStudy}" Width="Auto"/>
             </DataGrid.Columns>
         </DataGrid>
 
-        <ComboBox x:Name="comboBoxSort" HorizontalAlignment="Left" Margin="220,550,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="comboBoxSort_SelectionChanged">
+        <ComboBox x:Name="comboBoxSort" 
+          HorizontalAlignment="Left" 
+          Margin="220,550,0,0" 
+          VerticalAlignment="Top" 
+          Width="120" 
+          SelectionChanged="comboBoxSort_SelectionChanged">
+            <!-- Sortier-Optionen -->
             <ComboBoxItem Content="Name" />
             <ComboBoxItem Content="Age" />
             <ComboBoxItem Content="Clinic" />
             <ComboBoxItem Content="Ambulatory" />
             <ComboBoxItem Content="Stationary" />
+            <!-- Platzhalter-Item -->
+            <ComboBoxItem Content="Sort by:" IsEnabled="False" />
         </ComboBox>
+
 
 
 
