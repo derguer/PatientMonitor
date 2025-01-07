@@ -9,11 +9,15 @@
         Title="MainWindow" Height="750" Width="1500">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="281*"/>
+            <RowDefinition Height="439*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="805*"/>
             <ColumnDefinition Width="687*"/>
         </Grid.ColumnDefinitions>
-        <toolkit:Chart Title="Real-time ECG" Height="400" VerticalAlignment="Top">
+        <toolkit:Chart Title="Real-time ECG" Height="400" VerticalAlignment="Top" Grid.RowSpan="2">
             <toolkit:LineSeries x:Name="lineSeriesECG"
                                         Title="ECG Channel1" 
                                         IndependentValueBinding="{Binding Key}"
@@ -26,7 +30,7 @@
                 </toolkit:LineSeries.DependentRangeAxis>
             </toolkit:LineSeries>
         </toolkit:Chart>
-        <GroupBox x:Name="groupBoxECG" Header="Parameters" Width="380" Height="250" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,60" FontSize="16">
+        <GroupBox x:Name="groupBoxECG" Header="Parameters" Width="380" Height="250" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,60" FontSize="16" Grid.Row="1">
             <Grid>
                 <Slider x:Name="sliderAmplitudeValue" Minimum="0" Maximum="10" Value="0" Margin="10,70,10,0" Height="20" Width="350" VerticalAlignment="Top" ValueChanged="sliderAmplitudeValue_ValueChanged" IsEnabled="False"/>
                 <TextBlock x:Name="textBlockValuesMV" HorizontalAlignment="Left" Margin="10,45,0,0" TextWrapping="Wrap" Text="0 mV         2.5 mV       5 mV       7.5 mV       10 mV" VerticalAlignment="Top" Width="348"/>
@@ -41,7 +45,7 @@
 
             </Grid>
         </GroupBox>
-        <GroupBox x:Name="groupBoxPatient" Header="Input Patient" Width="380" Height="250" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="14,0,0,60" FontSize="16">
+        <GroupBox x:Name="groupBoxPatient" Header="Input Patient" Width="380" Height="250" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="14,0,0,60" FontSize="16" Grid.Row="1">
             <Grid>
                 <DatePicker x:Name="datePickerDate" HorizontalAlignment="Center" Margin="198,32,10,164" SelectedDateChanged="datePickerDate_SelectedDateChanged" />
                 <Button x:Name="buttonCreatePatient" Content="Create Patient" Width="120" Margin="198,190,50,2" Height="30" Click="buttonCreatePatient_Click"/>
@@ -57,22 +61,22 @@
 
             </Grid>
         </GroupBox>
-        <Button x:Name="buttonParameter" Content="Start the Simulation" HorizontalAlignment="Left" Margin="440,680,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonParameter_Click" Height="25" Width="152" IsEnabled="False"/>
-        <Button x:Name="buttonQuit" Content="Exit" HorizontalAlignment="Left" Margin="716,680,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonQuit_Click" Height="25" Width="36"/>
+        <Button x:Name="buttonParameter" Content="Start the Simulation" HorizontalAlignment="Left" Margin="440,399.5,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonParameter_Click" Height="25" Width="152" IsEnabled="False" Grid.Row="1"/>
+        <Button x:Name="buttonQuit" Content="Quit" HorizontalAlignment="Left" Margin="716,399.5,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonQuit_Click" Height="25" Width="36" Grid.Row="1"/>
 
-        <ComboBox x:Name="comboBoxHarmonics" HorizontalAlignment="Left" Margin="553,616,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="ComboBoxHarmonics_SelectionChanged" SelectedIndex="0" IsEnabled="False" RenderTransformOrigin="0.517,0.182" IsEnabledChanged="comboBoxHarmonics_IsEnabledChanged" Height="22" >
+        <ComboBox x:Name="comboBoxHarmonics" HorizontalAlignment="Left" Margin="553,335.5,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="ComboBoxHarmonics_SelectionChanged" SelectedIndex="0" IsEnabled="False" RenderTransformOrigin="0.517,0.182" IsEnabledChanged="comboBoxHarmonics_IsEnabledChanged" Height="22" Grid.Row="1" >
             <ComboBoxItem Content="1"/>
             <ComboBoxItem Content="2"/>
             <ComboBoxItem Content="3"/>
         </ComboBox>
-        <TextBlock x:Name="textBlockParameter" HorizontalAlignment="Left" Margin="440,590,0,0" TextWrapping="Wrap" Text="Parameter : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46" FontSize="16" Height="21" Width="84"/>
-        <ComboBox x:Name="comboBoxParameter" HorizontalAlignment="Left" Margin="440,616,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="comboBoxParameter_SelectionChanged" SelectedIndex="0" IsEnabled="False" IsEnabledChanged="comboBoxParameter_IsEnabledChanged" Height="22" RenderTransformOrigin="0.538,2.364">
+        <TextBlock x:Name="textBlockParameter" HorizontalAlignment="Left" Margin="440,309.5,0,0" TextWrapping="Wrap" Text="Parameter : " VerticalAlignment="Top" RenderTransformOrigin="1.712,0.46" FontSize="16" Height="21" Width="84" Grid.Row="1"/>
+        <ComboBox x:Name="comboBoxParameter" HorizontalAlignment="Left" Margin="440,335.5,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="comboBoxParameter_SelectionChanged" SelectedIndex="0" IsEnabled="False" IsEnabledChanged="comboBoxParameter_IsEnabledChanged" Height="22" RenderTransformOrigin="0.538,2.364" Grid.Row="1">
             <ComboBoxItem Content="ECG"/>
             <ComboBoxItem Content="EEG"/>
             <ComboBoxItem Content="EMG"/>
             <ComboBoxItem Content="Respiration"/>
         </ComboBox>
-        <GroupBox Margin="10,0,0,0" Header="MR Images" FontSize="16" Grid.Column="1">
+        <GroupBox Margin="10,0,0,0" Header="MR Images" FontSize="16" Grid.Column="1" Grid.RowSpan="2">
             <Grid Margin="0,319,-2,313">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="39*"/>
@@ -106,13 +110,13 @@
 
         </GroupBox>
         <TextBlock x:Name="textBlockAlarm" HorizontalAlignment="Left" Margin="14,25,0,0" TextWrapping="Wrap" Text=" " VerticalAlignment="Top" Width="100"/>
-        <Grid HorizontalAlignment="Left" Height="100" Margin="137,268,0,0" VerticalAlignment="Top" Width="100"/>
-        <Button x:Name="buttonFFT" Content="FFT" Grid.Column="1" HorizontalAlignment="Left" Margin="604,618,0,0" VerticalAlignment="Top" Width="60" IsEnabled="False" Click="buttonFFT_Click"/>
+        <Grid HorizontalAlignment="Left" Height="100" Margin="137,268,0,0" VerticalAlignment="Top" Width="100" Grid.RowSpan="2"/>
+        <Button x:Name="buttonFFT" Content="FFT" Grid.Column="1" HorizontalAlignment="Left" Margin="604,337.5,0,0" VerticalAlignment="Top" Width="60" IsEnabled="False" Click="buttonFFT_Click" Grid.Row="1"/>
 
         <CheckBox x:Name="switchParameterDatabase" Content="Toggle Switch"
           HorizontalAlignment="Left"
-          Margin="94,580,0,0"
-          VerticalAlignment="Top" Checked="switchParameterDatabase_Checked" Unchecked="switchParameterDatabase_Checked">
+          Margin="94,299.5,0,0"
+          VerticalAlignment="Top" Checked="switchParameterDatabase_Checked" Unchecked="switchParameterDatabase_Checked" Grid.Row="1">
             <CheckBox.Style>
                 <Style TargetType="CheckBox">
                     <Setter Property="Template">
@@ -142,12 +146,12 @@
             </CheckBox.Style>
         </CheckBox>
 
-        <TextBlock x:Name="textBlockSwitchParameter" HorizontalAlignment="Left" Margin="30,580,0,0" TextWrapping="Wrap" Text="Parameter" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textBlockSwitchDatabase" HorizontalAlignment="Left" Margin="140,580,0,0" TextWrapping="Wrap" Text="Database" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textBlockSwitchParameter" HorizontalAlignment="Left" Margin="30,299.5,0,0" TextWrapping="Wrap" Text="Parameter" VerticalAlignment="Top" Grid.Row="1"/>
+        <TextBlock x:Name="textBlockSwitchDatabase" HorizontalAlignment="Left" Margin="140,299.5,0,0" TextWrapping="Wrap" Text="Database" VerticalAlignment="Top" Grid.Row="1"/>
         <CheckBox x:Name="switchAmbulatoryStationary" Content="Toggle Switch"
           HorizontalAlignment="Left"
-          Margin="96,550,0,0"
-          VerticalAlignment="Top" RenderTransformOrigin="2.3,-0.15" Checked="switchAmbulatoryStationary_Checked" Unchecked="switchAmbulatoryStationary_Unchecked">
+          Margin="96,269.5,0,0"
+          VerticalAlignment="Top" RenderTransformOrigin="2.3,-0.15" Checked="switchAmbulatoryStationary_Checked" Unchecked="switchAmbulatoryStationary_Unchecked" Grid.Row="1">
             <CheckBox.Style>
                 <Style TargetType="CheckBox">
                     <Setter Property="Template">
@@ -176,12 +180,12 @@
                 </Style>
             </CheckBox.Style>
         </CheckBox>
-        <TextBlock x:Name="textBlockSwitchAmbulatory" HorizontalAlignment="Left" Margin="30,550,0,0" TextWrapping="Wrap" Text="Ambulatory" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textBlockSwitchStationary" HorizontalAlignment="Left" Margin="140,550,0,0" TextWrapping="Wrap" Text="Stationary" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textBlockRoom" HorizontalAlignment="Left" Margin="30,600,0,0" TextWrapping="Wrap" Text="Room :" VerticalAlignment="Top" FontSize="16"/>
-        <TextBlock x:Name="textBlockClinic" HorizontalAlignment="Left" Margin="220,499,0,0" TextWrapping="Wrap" Text="Clinic :" VerticalAlignment="Top" FontSize="16"/>
+        <TextBlock x:Name="textBlockSwitchAmbulatory" HorizontalAlignment="Left" Margin="30,269.5,0,0" TextWrapping="Wrap" Text="Ambulatory" VerticalAlignment="Top" Grid.Row="1"/>
+        <TextBlock x:Name="textBlockSwitchStationary" HorizontalAlignment="Left" Margin="140,269.5,0,0" TextWrapping="Wrap" Text="Stationary" VerticalAlignment="Top" Grid.Row="1"/>
+        <TextBlock x:Name="textBlockRoom" HorizontalAlignment="Left" Margin="30,319.5,0,0" TextWrapping="Wrap" Text="Room :" VerticalAlignment="Top" FontSize="16" Grid.Row="1"/>
+        <TextBlock x:Name="textBlockClinic" HorizontalAlignment="Left" Margin="220,218.5,0,0" TextWrapping="Wrap" Text="Clinic :" VerticalAlignment="Top" FontSize="16" Grid.Row="1"/>
 
-        <ComboBox x:Name="comboBoxClinic" HorizontalAlignment="Left" Margin="220,521,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="0">
+        <ComboBox x:Name="comboBoxClinic" HorizontalAlignment="Left" Margin="220,240.5,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="0" Grid.Row="1">
             <ComboBoxItem Content="Cardiology"/>
             <ComboBoxItem Content="Neurology"/>
             <ComboBoxItem Content="Orthopedics"/>
@@ -198,7 +202,7 @@
           VerticalAlignment="Top"
           Width="808"
           AutoGenerateColumns="False" 
-          SelectionChanged="patientDataGrid_SelectionChanged" MouseDoubleClick="patientDataGrid_MouseDoubleClick">
+          SelectionChanged="patientDataGrid_SelectionChanged" MouseDoubleClick="patientDataGrid_MouseDoubleClick" Grid.RowSpan="2">
 
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
@@ -223,10 +227,10 @@
 
         <ComboBox x:Name="comboBoxSort" 
           HorizontalAlignment="Left" 
-          Margin="220,550,0,0" 
+          Margin="220,269.5,0,0" 
           VerticalAlignment="Top" 
           Width="120" 
-          SelectionChanged="comboBoxSort_SelectionChanged">
+          SelectionChanged="comboBoxSort_SelectionChanged" Grid.Row="1">
             <!-- Sortier-Optionen -->
             <ComboBoxItem Content="Name" />
             <ComboBoxItem Content="Age" />
