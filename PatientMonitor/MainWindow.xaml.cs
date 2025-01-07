@@ -40,7 +40,7 @@ namespace PatientMonitor
 
         private bool lastPatient = false;
 
-        private ObservableCollection<KeyValuePair<int, double>> dataPointsTime;
+        private ObservableCollection<KeyValuePair<double, double>> dataPointsTime;
         private ObservableCollection<KeyValuePair<int, double>> dataPointsFrequency;
         private DispatcherTimer timer;
         private Patient patient;
@@ -71,8 +71,8 @@ namespace PatientMonitor
         {
             InitializeComponent();
             database = new Database();
-            
-            dataPointsTime = new ObservableCollection<KeyValuePair<int, double>>();
+
+            dataPointsTime = new ObservableCollection<KeyValuePair<double, double>>();
             dataPointsFrequency = new ObservableCollection<KeyValuePair<int, double>>();
             lineSeriesECG.ItemsSource = dataPointsTime; // Bind the series to the data points
             patientDataGrid.Visibility = switchParameterDatabase.IsChecked == false ? Visibility.Hidden : Visibility.Visible;
@@ -85,11 +85,11 @@ namespace PatientMonitor
             patientDataGrid.ItemsSource = database.Data;
 
             comboBoxSort.SelectedIndex = 5;
- 
+
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
-                 displayTime();       
+            displayTime();
         }
 
         private void textBoxPatientName_TextChanged(object sender, TextChangedEventArgs e)
@@ -108,7 +108,7 @@ namespace PatientMonitor
         {
             double.TryParse(textBoxFrequencyValue.Text, out double parsedFrequency);
             lastFrequency = parsedFrequency;
-
+  
             switch (parameter)
             {
                 case (MonitorConstants.Parameter.ECG):
@@ -124,7 +124,7 @@ namespace PatientMonitor
                     if (lastPatient) patient.RespFrequency = lastFrequency;
                     break;
             }
-            
+
         }
 
         private void sliderAmplitudeValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -134,12 +134,14 @@ namespace PatientMonitor
             switch (parameter)
             {
                 case (MonitorConstants.Parameter.ECG):
-                    if (lastPatient) { patient.ECGAmplitude = sliderAmplitudeValue.Value;
-                       
+                    if (lastPatient)
+                    {
+                        patient.ECGAmplitude = sliderAmplitudeValue.Value;
+
                     }
                     break;
                 case (MonitorConstants.Parameter.EMG):
-                   if (lastPatient) patient.EMGAmplitude = sliderAmplitudeValue.Value;
+                    if (lastPatient) patient.EMGAmplitude = sliderAmplitudeValue.Value;
                     break;
                 case (MonitorConstants.Parameter.EEG):
                     if (lastPatient) patient.EEGAmplitude = sliderAmplitudeValue.Value;
@@ -154,7 +156,7 @@ namespace PatientMonitor
         private void datePickerDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             dateTime = datePickerDate.SelectedDate.Value;
-            
+
         }
 
         private void buttonCreatePatient_Click(object sender, RoutedEventArgs e)
@@ -166,12 +168,29 @@ namespace PatientMonitor
             
 
             if (!isRoomValid) patientRoom = 0; // Standardwert für Raum, falls ungültig
-
             if (!isNameValid) MessageBox.Show("Name is not valid!");
             if (!isAgeValid) MessageBox.Show("Age is not valid!");
             if (!isDateSelected) MessageBox.Show("Date is not valid!");
 
-            if (isNameValid && isAgeValid && isDateSelected)
+
+            if (switchAmbulatoryStationary.IsChecked == true) // Stationary
+            {
+                if (patientRoom > 0)
+                {
+                    isRoomValid = true;
+                }
+                else
+                {
+                    MessageBox.Show("Room number is required for stationary patients.");
+                    isRoomValid = false;
+                }
+            }
+            else // Ambulatory
+            {
+                isRoomValid = true; // Kein Raum erforderlich für ambulante Patienten
+            }
+
+            if (isNameValid && isAgeValid && isDateSelected && isRoomValid )
             {
                 MonitorConstants.clinic selectedClinic = (MonitorConstants.clinic)comboBoxClinic.SelectedIndex;
                 DateTime dateTime = datePickerDate.SelectedDate.Value;
@@ -232,15 +251,13 @@ namespace PatientMonitor
                 patientDataGrid.ItemsSource = database.GetPatients(); // Aktualisiere mit neuer Liste
 
                 // Aktiviere weitere Buttons
-                
+
                 buttonParameter.IsEnabled = true;
                 buttonSafeDatabase.IsEnabled = true;
 
                 MessageBox.Show("Patient was created!");
             }
         }
-
-
 
         private void buttonQuit_Click(object sender, RoutedEventArgs e)
         {
@@ -259,12 +276,18 @@ namespace PatientMonitor
             textBoxHightAlarm.IsEnabled = false;
             textBoxLowAlarm.IsEnabled = false;
             buttonFFT.IsEnabled = false;
-            
+
+            var result = MessageBox.Show("Are you sure you want to exit?", "Confirm Exit", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                Application.Current.Shutdown();
+            }
+
         }
 
         private void buttonParameter_Click(object sender, RoutedEventArgs e)
         {
-           
+
             timer.Start();
             sliderAmplitudeValue.IsEnabled = true;
             textBoxFrequencyValue.IsEnabled = true;
@@ -281,7 +304,7 @@ namespace PatientMonitor
             textBoxHightAlarm.IsEnabled = true;
             textBoxLowAlarm.IsEnabled = true;
             buttonFFT.IsEnabled = true;
-            
+
 
 
         }
@@ -379,10 +402,11 @@ namespace PatientMonitor
         private void ComboBoxHarmonics_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             lastHarmonics = comboBoxHarmonics.SelectedIndex;
-            if (lastPatient) { 
-                
-                patient.ECGHarmonics = lastHarmonics; 
-                UpdateHarmonics();    
+            if (lastPatient)
+            {
+
+                patient.ECGHarmonics = lastHarmonics;
+                UpdateHarmonics();
             }
         }
 
@@ -413,24 +437,24 @@ namespace PatientMonitor
                 case MonitorConstants.Parameter.ECG:
                     {
                         if (lastPatient) textBoxFrequencyValue.Text = patient.ECGFrequency.ToString();
-                                         sliderAmplitudeValue.Value = patient.ECGAmplitude;
-                                         comboBoxHarmonics_deaktivation(true);
-                                         textBoxHightAlarm.Text = patient.ECGHighAlarm.ToString();
-                                         textBoxLowAlarm.Text = patient.ECGLowAlarm.ToString();
-                                         textBlockAlarm.Text = patient.ECGHighAlarmString;
-                                         textBlockAlarm.Text = patient.ECGLowAlarmString;
+                        sliderAmplitudeValue.Value = patient.ECGAmplitude;
+                        comboBoxHarmonics_deaktivation(true);
+                        textBoxHightAlarm.Text = patient.ECGHighAlarm.ToString();
+                        textBoxLowAlarm.Text = patient.ECGLowAlarm.ToString();
+                        textBlockAlarm.Text = patient.ECGHighAlarmString;
+                        textBlockAlarm.Text = patient.ECGLowAlarmString;
 
                     }
                     break;
                 case MonitorConstants.Parameter.EMG:
                     {
                         if (lastPatient) textBoxFrequencyValue.Text = patient.EMGFrequency.ToString();
-                                         sliderAmplitudeValue.Value = patient.EMGAmplitude;
-                                         comboBoxHarmonics_deaktivation(false);
-                                         textBoxHightAlarm.Text = patient.EMGHighAlarm.ToString();
-                                         textBoxLowAlarm.Text = patient.EMGLowAlarm.ToString();
-                                         textBlockAlarm.Text = patient.EMGHighAlarmString;
-                                         textBlockAlarm.Text = patient.EMGLowAlarmString;
+                        sliderAmplitudeValue.Value = patient.EMGAmplitude;
+                        comboBoxHarmonics_deaktivation(false);
+                        textBoxHightAlarm.Text = patient.EMGHighAlarm.ToString();
+                        textBoxLowAlarm.Text = patient.EMGLowAlarm.ToString();
+                        textBlockAlarm.Text = patient.EMGHighAlarmString;
+                        textBlockAlarm.Text = patient.EMGLowAlarmString;
 
 
 
@@ -439,24 +463,24 @@ namespace PatientMonitor
                 case MonitorConstants.Parameter.EEG:
                     {
                         if (lastPatient) textBoxFrequencyValue.Text = patient.EEGFrequency.ToString();
-                                         sliderAmplitudeValue.Value = patient.EEGAmplitude;
-                                         comboBoxHarmonics_deaktivation(false);
-                                         textBoxHightAlarm.Text = patient.EEGHighAlarm.ToString();
-                                         textBoxLowAlarm.Text = patient.EEGLowAlarm.ToString();
-                                         textBlockAlarm.Text = patient.EEGHighAlarmString;
-                                         textBlockAlarm.Text = patient.EEGLowAlarmString;
+                        sliderAmplitudeValue.Value = patient.EEGAmplitude;
+                        comboBoxHarmonics_deaktivation(false);
+                        textBoxHightAlarm.Text = patient.EEGHighAlarm.ToString();
+                        textBoxLowAlarm.Text = patient.EEGLowAlarm.ToString();
+                        textBlockAlarm.Text = patient.EEGHighAlarmString;
+                        textBlockAlarm.Text = patient.EEGLowAlarmString;
 
                     }
                     break;
                 case MonitorConstants.Parameter.Resp:
                     {
                         if (lastPatient) textBoxFrequencyValue.Text = patient.RespFrequency.ToString();
-                                         sliderAmplitudeValue.Value = patient.RespAmplitude;
-                                         comboBoxHarmonics_deaktivation(false);
-                                         textBoxHightAlarm.Text = patient.RespHighAlarm.ToString();
-                                         textBoxLowAlarm.Text = patient.RespLowAlarm.ToString();
-                                         textBlockAlarm.Text = patient.RespiHighAlarmString;
-                                         textBlockAlarm.Text = patient.RespiLowAlarmString;
+                        sliderAmplitudeValue.Value = patient.RespAmplitude;
+                        comboBoxHarmonics_deaktivation(false);
+                        textBoxHightAlarm.Text = patient.RespHighAlarm.ToString();
+                        textBoxLowAlarm.Text = patient.RespLowAlarm.ToString();
+                        textBlockAlarm.Text = patient.RespiHighAlarmString;
+                        textBlockAlarm.Text = patient.RespiLowAlarmString;
 
 
                     }
@@ -543,26 +567,30 @@ namespace PatientMonitor
             switch (parameter)
             {
                 case (MonitorConstants.Parameter.ECG):
-                    if (lastPatient) { 
+                    if (lastPatient)
+                    {
                         patient.ECGLowAlarm = lastLowAlarmFrequency;
                         textBlockAlarm.Text = patient.ECGLowAlarmString;
                     }
                     break;
                 case (MonitorConstants.Parameter.EMG):
-                    if (lastPatient) { 
+                    if (lastPatient)
+                    {
                         patient.EMGLowAlarm = lastLowAlarmFrequency;
                         textBlockAlarm.Text = patient.EMGLowAlarmString;
 
                     }
                     break;
                 case (MonitorConstants.Parameter.EEG):
-                    if (lastPatient) { 
+                    if (lastPatient)
+                    {
                         patient.EEGLowAlarm = lastLowAlarmFrequency;
                         textBlockAlarm.Text = patient.EEGLowAlarmString;
                     }
                     break;
                 case (MonitorConstants.Parameter.Resp):
-                    if (lastPatient) { 
+                    if (lastPatient)
+                    {
                         patient.RespLowAlarm = lastLowAlarmFrequency;
                         textBlockAlarm.Text = patient.RespiLowAlarmString;
                     }
@@ -603,7 +631,7 @@ namespace PatientMonitor
                     {
                         patient.ECGHighAlarm = lastHighAlarmFrequency;
                         textBlockAlarm.Text = patient.ECGHighAlarmString;
-                        
+
                     }
                     break;
                 case (MonitorConstants.Parameter.EMG):
@@ -611,7 +639,7 @@ namespace PatientMonitor
                     {
                         patient.EMGHighAlarm = lastHighAlarmFrequency;
                         textBlockAlarm.Text = patient.EMGHighAlarmString;
-                        
+
 
                     }
                     break;
@@ -620,7 +648,7 @@ namespace PatientMonitor
                     {
                         patient.EEGHighAlarm = lastHighAlarmFrequency;
                         textBlockAlarm.Text = patient.EEGHighAlarmString;
-                        
+
                     }
                     break;
                 case (MonitorConstants.Parameter.Resp):
@@ -676,7 +704,7 @@ namespace PatientMonitor
 
         private void buttonFFT_Click(object sender, RoutedEventArgs e)
         {
-         
+
             if (patient.SampleList.Count > 512)
             {
                 displayFrequency();
@@ -771,8 +799,8 @@ namespace PatientMonitor
 
         private void textBoxPatientRoom_TextChanged(object sender, TextChangedEventArgs e)
         {
-                int.TryParse(textBoxPatientRoom.Text, out int parsedage);
-                lastRoom = parsedage;
+            int.TryParse(textBoxPatientRoom.Text, out int parsedage);
+            lastRoom = parsedage;
 
         }
 
@@ -851,7 +879,7 @@ namespace PatientMonitor
 
         private void displayDatabase()
         {
-            
+
             //patientDataGrid.ItemsSource = null;
             //patientDataGrid.ItemsSource = database.Data;
         }
@@ -923,7 +951,7 @@ namespace PatientMonitor
                 comboBoxHarmonics.IsEnabled = true;
                 textBlockHarmonics.Text = "Harmonics : ";
             }
-            else 
+            else
             {
                 comboBoxHarmonics.IsEnabled = false;
                 comboBoxHarmonics.Visibility = Visibility.Collapsed; textBlockHarmonics.Text = "";
@@ -931,9 +959,10 @@ namespace PatientMonitor
         }
         private void displayTime()
         {
-             
+
             // Generate a new data point          
-            if (patient != null) dataPointsTime.Add(new KeyValuePair<int, double>(index++, patient.NextSample(index, parameter)));
+            if (patient != null) dataPointsTime.Add(new KeyValuePair<double, double>(index/100.0, patient.NextSample(index, parameter)));
+            index++;
 
             // Optional: Remove old points to keep the chart clean
             if (dataPointsTime.Count > 200) // Maximum number of points
@@ -943,7 +972,7 @@ namespace PatientMonitor
         }
         private void displayFrequency()
         {
-            
+
             const double samplingRate = 6000.0; // Example sampling rate in Hz
             Spektrum spektrum = new Spektrum(sampleSize);
 

@@ -53,6 +53,7 @@ namespace PatientMonitor
             mRImages = new MRImages();
             
         }
+
         public Patient(string patientName, int age, DateTime dateOfStudy)
         {
             this.patientName = patientName;

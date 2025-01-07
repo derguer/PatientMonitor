@@ -19,10 +19,10 @@
                                         IndependentValueBinding="{Binding Key}"
                                         DependentValueBinding="{Binding Value}">
                 <toolkit:LineSeries.IndependentAxis>
-                    <toolkit:LinearAxis Orientation="X" Title="Time (ms)" ShowGridLines="True"  />
+                    <toolkit:LinearAxis Orientation="X" Title="Time (s)" ShowGridLines="True"  />
                 </toolkit:LineSeries.IndependentAxis>
                 <toolkit:LineSeries.DependentRangeAxis>
-                    <toolkit:LinearAxis Orientation="Y" Title="Value (mA)" ShowGridLines="True"  />
+                    <toolkit:LinearAxis Orientation="Y" Title="Value (mV)" ShowGridLines="True"  />
                 </toolkit:LineSeries.DependentRangeAxis>
             </toolkit:LineSeries>
         </toolkit:Chart>
@@ -57,8 +57,8 @@
 
             </Grid>
         </GroupBox>
-        <Button x:Name="buttonParameter" Content="Start Parameters" HorizontalAlignment="Left" Margin="514,680,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonParameter_Click" Height="25" Width="119" IsEnabled="False"/>
-        <Button x:Name="buttonQuit" Content="Stop" HorizontalAlignment="Left" Margin="716,680,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonQuit_Click" Height="25" Width="36"/>
+        <Button x:Name="buttonParameter" Content="Start the Simulation" HorizontalAlignment="Left" Margin="440,680,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonParameter_Click" Height="25" Width="152" IsEnabled="False"/>
+        <Button x:Name="buttonQuit" Content="Exit" HorizontalAlignment="Left" Margin="716,680,0,0" VerticalAlignment="Top" FontSize="16" Click="buttonQuit_Click" Height="25" Width="36"/>
 
         <ComboBox x:Name="comboBoxHarmonics" HorizontalAlignment="Left" Margin="553,616,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="ComboBoxHarmonics_SelectionChanged" SelectedIndex="0" IsEnabled="False" RenderTransformOrigin="0.517,0.182" IsEnabledChanged="comboBoxHarmonics_IsEnabledChanged" Height="22" >
             <ComboBoxItem Content="1"/>
@@ -181,7 +181,7 @@
         <TextBlock x:Name="textBlockRoom" HorizontalAlignment="Left" Margin="30,600,0,0" TextWrapping="Wrap" Text="Room :" VerticalAlignment="Top" FontSize="16"/>
         <TextBlock x:Name="textBlockClinic" HorizontalAlignment="Left" Margin="220,499,0,0" TextWrapping="Wrap" Text="Clinic :" VerticalAlignment="Top" FontSize="16"/>
 
-        <ComboBox x:Name="comboBoxClinic" HorizontalAlignment="Left" Margin="220,521,0,0" VerticalAlignment="Top" Width="120">
+        <ComboBox x:Name="comboBoxClinic" HorizontalAlignment="Left" Margin="220,521,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="0">
             <ComboBoxItem Content="Cardiology"/>
             <ComboBoxItem Content="Neurology"/>
             <ComboBoxItem Content="Orthopedics"/>
@@ -242,4 +242,3 @@
 
     </Grid>
 </Window>
-
