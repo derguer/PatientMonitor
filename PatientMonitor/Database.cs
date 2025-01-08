@@ -1,4 +1,13 @@
-﻿using System;
+﻿/// <summary>
+/// Die Klasse 'Database' verwaltet eine Liste von Patienten mithilfe einer ObservableCollection. 
+/// Sie bietet Funktionen zum Hinzufügen, Entfernen, Abrufen, Speichern und Laden von Patienten.
+/// Beim Speichern werden alle wichtigen Patientendaten, einschließlich physiologischer Parameter 
+/// und Patiententypen (stationär oder ambulant), in einer Binärdatei gespeichert. 
+/// Beim Laden werden diese Daten rekonstruiert und in die Datenbank eingetragen. 
+/// Es wird sichergestellt, dass die maximale Anzahl von 100 aktiven Patienten nicht überschritten wird.
+/// </summary>
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,21 +17,32 @@ using System.Collections.ObjectModel;
 
 namespace PatientMonitor
 {
+    /// <summary>
+    /// Die Klasse 'Database' verwaltet eine Sammlung von Patienten 
+    /// und bietet Methoden zum Hinzufügen, Entfernen, Speichern und Laden der Patienten.
+    /// </summary>
     class Database
     {
-        // Maximale Anzahl aktiver Patienten
+        // Maximale Anzahl aktiver Patienten, die gespeichert werden können
         const int maxActivePatients = 100;
 
         // Liste zur Speicherung der Patienten
         //private List<Patient> data = new List<Patient>();
-        private ObservableCollection<Patient> data = new ObservableCollection<Patient>();
+        // ObservableCollection zur Speicherung der Patienten, um Änderungen automatisch im UI anzuzeigen
 
+        private ObservableCollection<Patient> data = new ObservableCollection<Patient>();
+        /// <summary>
+        /// Öffentliche Eigenschaft zum Zugriff auf die Patientenliste.
+        /// </summary>
         public ObservableCollection<Patient> Data
         {
             get { return data; }
         }
 
-
+        /// <summary>
+        /// Fügt einen neuen Patienten zur Datenbank hinzu, sofern das Maximum nicht erreicht ist.
+        /// </summary>
+        /// <param name="patient">Der hinzuzufügende Patient.</param>
         // Methode zum Hinzufügen eines Patienten
         public void AddPatient(Patient patient)
         {
@@ -35,19 +55,30 @@ namespace PatientMonitor
                 throw new InvalidOperationException("The database has reached its maximum capacity of active patients.");
             }
         }
-
+        /// <summary>
+        /// Gibt eine Liste aller Patienten zurück.
+        /// </summary>
+        /// <returns>Liste der Patienten.</returns>
         // Methode zum Abrufen aller Patienten
         public List<Patient> GetPatients()
         {
 
             return data.ToList();
         }
-
+        /// <summary>
+        /// Gibt die aktuelle Anzahl der Patienten in der Datenbank zurück.
+        /// </summary>
+        /// <returns>Anzahl der Patienten.</returns>
         // Optionale Methode: Patientenanzahl abrufen
         public int PatientCount()
         {
             return data.Count;
         }
+        /// <summary>
+        /// Entfernt einen Patienten aus der Datenbank.
+        /// </summary>
+        /// <param name="patient">Der zu entfernende Patient.</param>
+        /// <exception cref="ArgumentException">Wird ausgelöst, wenn der Patient nicht in der Datenbank vorhanden ist.</exception>
 
         // Optionale Methode: Entfernen eines Patienten
         public void RemovePatient(Patient patient)
@@ -61,6 +92,11 @@ namespace PatientMonitor
                 throw new ArgumentException("The specified patient does not exist in the database.");
             }
         }
+        /// <summary>
+        /// Speichert die Patientenliste in einer Datei.
+        /// </summary>
+        /// <param name="dataPath">Der Pfad zur Datei, in der die Daten gespeichert werden.</param>
+
         public void SaveData(string dataPath)
         {
             int patientCount = data.Count;
@@ -68,11 +104,11 @@ namespace PatientMonitor
             using (Stream ausgabe = File.Create(dataPath))
             {
                 BinaryWriter writer = new BinaryWriter(ausgabe);
-                writer.Write(patientCount);
+                writer.Write(patientCount); // Anzahl der Patienten schreiben
                 foreach (Patient patient in data)
                 {
                     if (patient is Stationary)
-                        writer.Write(true);
+                        writer.Write(true); // Schreibe den Patiententyp (stationär/ambulant)
                     else
                         writer.Write(false);
                     writer.Write(patient.PatientName);
@@ -99,7 +135,7 @@ namespace PatientMonitor
                     writer.Write(patient.RespHighAlarm);
                     writer.Write(patient.RespLowAlarm);
                     writer.Write(patient.RespHarmonics);
-                    if (patient is Stationary)
+                    if (patient is Stationary)  // Falls der Patient stationär ist, Raumnummer speichern
                     {
                         Stationary stationary = patient as Stationary;
                         writer.Write(stationary.RoomNumber);
@@ -107,22 +143,28 @@ namespace PatientMonitor
                 }
             }
         }
+        /// <summary>
+        /// Lädt die Patientenliste aus einer Datei und aktualisiert die Datenbank.
+        /// </summary>
+        /// <param name="dataPath">Der Pfad zur Datei, aus der die Daten geladen werden.</param>
+
         public void OpenData(string dataPath)
         {
             using (Stream eingabe = File.OpenRead(dataPath))
             {
                 BinaryReader reader = new BinaryReader(eingabe);
-                data.Clear(); // ObservableCollection wird geleert
-                int patientCount = reader.ReadInt32();
+                data.Clear(); // Bestehende Daten löschen
+                int patientCount = reader.ReadInt32();  // Anzahl der Patienten lesen
 
                 for (int i = 0; i < patientCount; i++)
                 {
+                    // Lese Patiententyp (stationär/ambulant)
                     bool isStationary = reader.ReadBoolean();
                     string patientName = reader.ReadString();
                     int age = reader.ReadInt32();
                     DateTime dateOfStudy = DateTime.Parse(reader.ReadString());
                     MonitorConstants.clinic clinic = (MonitorConstants.clinic)reader.ReadInt32();
-
+                    // Lese die physiologischen Parameter
                     double ecgAmplitude = reader.ReadDouble();
                     double ecgFrequency = reader.ReadDouble();
                     double ecgHighAlarm = reader.ReadDouble();
@@ -146,7 +188,7 @@ namespace PatientMonitor
                     double respHighAlarm = reader.ReadDouble();
                     double respLowAlarm = reader.ReadDouble();
                     int respHarmonics = reader.ReadInt32();
-
+                    // Erstelle den Patient anhand des Typs
                     Patient patient;
                     if (isStationary)
                     {
@@ -215,7 +257,7 @@ namespace PatientMonitor
                         };
                         patient = ambPatient;
                     }
-                    // Patient hinzufügen
+                    // Patient zur Datenbank hinzufügen
                     data.Add(patient);
                 }
                 // Debugging: Anzahl der geladenen Patienten

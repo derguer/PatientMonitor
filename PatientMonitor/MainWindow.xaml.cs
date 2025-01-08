@@ -27,6 +27,9 @@ namespace PatientMonitor
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Initialisiert das Hauptfenster der Anwendung.
+        // Bindet die Datenquellen an UI-Elemente, setzt Standardwerte und konfiguriert den Timer.
+
         private double lastFrequency, lastHighAlarmFrequency, lastLowAlarmFrequency;
         private double ampValue;
 
@@ -69,6 +72,9 @@ namespace PatientMonitor
 
         public MainWindow()
         {
+            // Initialisiert das Hauptfenster der Anwendung.
+            // Bindet die Datenquellen an UI-Elemente, setzt Standardwerte und konfiguriert den Timer.
+
             InitializeComponent();
             database = new Database();
 
@@ -88,15 +94,19 @@ namespace PatientMonitor
             comboBoxClinic.SelectedIndex = 0;
 
         }
+        // Wird bei jedem Timer-Tick aufgerufen, um die Echtzeit-Anzeige der Patientendaten zu aktualisieren.
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             displayTime();
         }
+        // Speichert den aktuellen Wert des eingegebenen Patientennamens in die Variable `lastPatientName`.
 
         private void textBoxPatientName_TextChanged(object sender, TextChangedEventArgs e)
         {
             lastPatientName = textBlockPatientName.Text;
         }
+        // Versucht, die Eingabe in der TextBox für das Alter in einen Integer zu konvertieren und speichert das Ergebnis.
 
         private void textBoxPatientAge_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -104,6 +114,8 @@ namespace PatientMonitor
             lastPatientAge = parsedage;
 
         }
+        // Aktualisiert die Frequenz des aktuell ausgewählten Parameters.
+        // Führt eine Alarmprüfung durch und zeigt entsprechende Warnungen an, wenn die Frequenz die Alarmgrenzen überschreitet.
 
         private void textBoxFrequencyValue_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -200,6 +212,7 @@ namespace PatientMonitor
             }
         }
 
+        // Aktualisiert die Amplitude des aktuellen Parameters basierend auf dem Slider-Wert.
 
         private void sliderAmplitudeValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -226,12 +239,16 @@ namespace PatientMonitor
             }
 
         }
+        // Speichert das ausgewählte Datum der Studie, wenn der Benutzer im DatePicker ein neues Datum auswählt.
 
         private void datePickerDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             dateTime = datePickerDate.SelectedDate.Value;
 
         }
+        // Erstellt einen neuen Patienten basierend auf den eingegebenen Daten.
+        // Prüft, ob der Patient bereits existiert, und fügt ihn der Datenbank hinzu, wenn keine Duplikate gefunden werden.
+        // Aktualisiert anschließend das DataGrid und setzt den neuen Patienten als aktiv.
 
         private void buttonCreatePatient_Click(object sender, RoutedEventArgs e)
         {
@@ -342,6 +359,8 @@ namespace PatientMonitor
                 resetParametersafterPatitent();
             }
         }
+        // Setzt alle Eingabefelder (Frequenz, Amplitude, Alarmgrenzen und Harmonische) auf ihre Standardwerte zurück.
+
         private void resetParametersafterPatitent()
         {
             // Setze alle Werte auf die Standardwerte
@@ -358,6 +377,8 @@ namespace PatientMonitor
             lastHarmonics = 0;
         }
 
+        // Zeigt eine Bestätigungsnachricht an, bevor die Anwendung beendet wird.
+        // Stoppt den Timer und deaktiviert alle Steuerungselemente.
 
         private void buttonQuit_Click(object sender, RoutedEventArgs e)
         {
@@ -384,6 +405,7 @@ namespace PatientMonitor
             }
 
         }
+        // Aktiviert die Steuerungselemente für die Patientenparameter und startet den Timer.
 
         private void buttonParameter_Click(object sender, RoutedEventArgs e)
         {
@@ -408,11 +430,14 @@ namespace PatientMonitor
 
 
         }
+        // Verhindert die Eingabe nicht-numerischer Zeichen in der TextBox für das Alter des Patienten.
 
         private void textBoxPatientAge_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !int.TryParse(e.Text, out _);
         }
+        // Wechselt den angezeigten Parameter (ECG, EMG, EEG, Resp) basierend auf der Auswahl in der ComboBox.
+        // Aktualisiert die entsprechenden Eingabefelder und Diagramme mit den Werten des ausgewählten Parameters.
 
         private void textBoxFrequencyValue_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
@@ -533,6 +558,8 @@ namespace PatientMonitor
             else { comboBox.SelectionChanged -= comboBoxParameter_SelectionChanged; }
 
         }
+        // Wechselt den angezeigten Parameter (ECG, EMG, EEG, Resp) basierend auf der Auswahl in der ComboBox.
+        // Aktualisiert die entsprechenden Eingabefelder und Diagramme mit den Werten des ausgewählten Parameters.
 
         private void comboBoxParameter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -597,6 +624,7 @@ namespace PatientMonitor
             allParameter = savedParameters;
 
         }
+        // Setzt Frequenz, Amplitude und Harmonik auf Standardwerte zurück und aktualisiert die entsprechenden UI-Elemente.
 
         private void resetParameters()
         {
@@ -633,6 +661,9 @@ namespace PatientMonitor
                 lastlastHarmonics = patient.ECGHarmonics;
             }
         }
+        // Öffnet eine Datei-Dialogbox, um eine gespeicherte Patientendatenbank zu laden.
+        // Liest die Patientendaten aus der Datei und zeigt sie im DataGrid an.
+        // Markiert den zuletzt geladenen Patienten als aktiv und zeigt seine Informationen im Eingabebereich an.
 
         private void buttonLoadImage_Click(object sender, RoutedEventArgs e)
         {
@@ -893,6 +924,9 @@ namespace PatientMonitor
                 MessageBox.Show($"Failed to navigate to the previous image: {ex.Message}");
             }
         }
+        // Überprüft die Eingabe für die maximale Anzahl der Bilder.
+        // Falls die Eingabe gültig ist, wird die Anzahl der Bilder aktualisiert und das erste Bild geladen.
+        // Bei ungültiger Eingabe wird ein Platzhalterwert angezeigt.
         private void textBoxMaxImages_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (int.TryParse(textBoxImageIndex.Text, out int newMaxImages) && newMaxImages > 0)
@@ -917,6 +951,10 @@ namespace PatientMonitor
                 textBoxImageIndex.Text = patient.MRImages.MaxImages.ToString();
             }
         }
+        // Reagiert auf das Drücken der Enter-Taste, wenn der Benutzer eine neue maximale Anzahl an Bildern eingibt.
+        // Wenn die Eingabe gültig ist, wird die Anzahl der Bilder aktualisiert.
+        // Bei ungültiger Eingabe wird eine Fehlermeldung angezeigt und der alte Wert zurückgesetzt.
+
         private void textBoxMaxImages_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -944,12 +982,14 @@ namespace PatientMonitor
                 }
             }
         }
+        // Blockiert alle Eingaben außer numerischen Zeichen, um sicherzustellen, dass nur Zahlen eingegeben werden.
 
         private void textBoxMaxImages_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !int.TryParse(e.Text, out _); // Blockiere nicht-numerische Eingaben
         }
-
+        // Diese Methode reagiert auf Änderungen des Wertes der ProgressBar.
+        // Aktuell leer, kann für zukünftige Funktionen verwendet werden.
         private void ProgressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
@@ -984,18 +1024,22 @@ namespace PatientMonitor
         {
             e.Handled = !int.TryParse(e.Text, out _);
         }
+        // Aktiviert die Eingabe des Raumnummers-Feldes, wenn der Benutzer den Schalter auf "Stationary" setzt.
 
         private void switchAmbulatoryStationary_Checked(object sender, RoutedEventArgs e)
         {
             textBoxPatientRoom.IsEnabled = true;
         }
-
+        // Deaktiviert die Eingabe des Raumnummers-Feldes und setzt den Wert auf "No Room",
+        // wenn der Benutzer den Schalter auf "Ambulatory" setzt.
         private void switchAmbulatoryStationary_Unchecked(object sender, RoutedEventArgs e)
         {
             textBoxPatientRoom.Text = "No Room";
             textBoxPatientRoom.IsEnabled = false;
         }
-
+        // Zeigt oder versteckt das DataGrid, basierend auf dem Zustand des Schalters.
+        // Wenn der Schalter aktiviert ist, wird das DataGrid versteckt.
+        // Andernfalls wird das DataGrid angezeigt.
         private void switchParameterDatabase_Checked(object sender, RoutedEventArgs e)
         {
             if (switchParameterDatabase.IsChecked == false)
@@ -1009,7 +1053,8 @@ namespace PatientMonitor
                 patientDataGrid.Visibility = Visibility.Visible;
             }
         }
-
+        // Sortiert die Patientenliste basierend auf der Auswahl im ComboBox-Sortierfeld.
+        // Verwendet einen benutzerdefinierten Comparer zur Sortierung der Patienten nach Name, Alter, Klinik etc.
         private void comboBoxSort_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Stelle sicher, dass ein tatsächlicher Sortier-Index ausgewählt ist
@@ -1035,14 +1080,18 @@ namespace PatientMonitor
             // Das DataGrid wird automatisch aktualisiert
         }
 
-
+        // (Derzeit deaktiviert)
+        // Diese Methode könnte dazu verwendet werden, das DataGrid erneut zu binden,
+        // falls eine manuelle Aktualisierung der Datenquelle erforderlich ist.
         private void displayDatabase()
         {
 
             //patientDataGrid.ItemsSource = null;
             //patientDataGrid.ItemsSource = database.Data;
         }
-
+        // Öffnet einen Datei-Dialog, um die aktuelle Patientendatenbank zu speichern.
+        // Ruft die Methode `SaveData` der `Database`-Klasse auf, um die Daten in eine Datei zu schreiben.
+        // Zeigt eine Erfolgsmeldung an, wenn das Speichern erfolgreich war.
         private void buttonSafeDatabase_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
@@ -1058,7 +1107,8 @@ namespace PatientMonitor
                 MessageBox.Show("Database saved successfully!", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-
+        // Aktualisiert den aktuell ausgewählten Patienten basierend auf der Auswahl im DataGrid.
+        // Ruft `DisplayPatientInInputSection` auf, um die Patienteninformationen im Eingabebereich anzuzeigen.
         private void patientDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (patientDataGrid.SelectedItem is Patient selectedPatient)
@@ -1180,7 +1230,8 @@ namespace PatientMonitor
             }
         }
 
-
+        // Reagiert auf einen Doppelklick auf eine Zeile im DataGrid.
+        // Setzt den ausgewählten Patienten als aktiv und zeigt seine Daten im Eingabebereich an.
 
         private void patientDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -1190,7 +1241,9 @@ namespace PatientMonitor
                 DisplayPatientInInputSection(patient);
             }
         }
-
+        // Aktiviert oder deaktiviert die Anzeige der Harmonics-ComboBox.
+        // Wenn aktiviert, wird der zuletzt verwendete Wert angezeigt.
+        // Wenn deaktiviert, wird die ComboBox versteckt.
         private void comboBoxHarmonics_deaktivation(bool ein_oderAus)
         {
             if (ein_oderAus)
@@ -1206,6 +1259,9 @@ namespace PatientMonitor
                 comboBoxHarmonics.Visibility = Visibility.Collapsed; textBlockHarmonics.Text = "";
             }
         }
+        // Fügt neue Datenpunkte für die Echtzeit-Anzeige der Signalwerte hinzu.
+        // Entfernt ältere Datenpunkte, wenn die maximale Anzahl überschritten wird, um das Diagramm übersichtlich zu halten.
+
         private void displayTime()
         {
 
@@ -1219,6 +1275,10 @@ namespace PatientMonitor
                 dataPointsTime.RemoveAt(0); // Remove the oldest point
             }
         }
+        // Führt eine Fourier-Transformation (FFT) auf den zuletzt aufgenommenen Samples durch.
+        // Aktualisiert das Frequenzdiagramm mit den berechneten Frequenz- und Amplitudenwerten.
+
+
         private void displayFrequency()
         {
 

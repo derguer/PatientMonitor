@@ -1,4 +1,11 @@
-﻿using System;
+﻿/// <summary>
+/// Die Klasse 'Spektrum' implementiert die Fast Fourier Transformation (FFT)
+/// zur Frequenzanalyse von diskreten Signalen. Sie bietet Methoden zur 
+/// Umwandlung von Zeitbereichsdaten in den Frequenzbereich sowie zur 
+/// Verwaltung der Abtastrate.
+/// </summary>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,23 +13,36 @@ using System.Threading.Tasks;
 
 namespace PatientMonitor
 {
+    /// <summary>
+    /// Die Klasse 'Spektrum' dient der Berechnung der Fast Fourier Transformation (FFT).
+    /// </summary>
     public class Spektrum
     {
-        public int samples = 128;
-
+        public int samples = 128; // Anzahl der Samples (Abtastpunkte)
+        /// <summary>
+        /// Struktur zur Darstellung komplexer Zahlen.
+        /// </summary>
         public struct komplex
         {
-            public double re;
-            public double im;
+            public double re;// Realteil
+            public double im;// Imaginärteil
         }
-        public komplex[] data;
-
+        public komplex[] data; // Array zur Speicherung der komplexen Daten
+        /// <summary>
+        /// Konstruktor, der die Dimension der FFT und das Datenarray initialisiert.
+        /// </summary>
+        /// <param name="dimension">Anzahl der Abtastpunkte.</param>
         public Spektrum(int dimension)
         {
             samples = dimension;
             data = new komplex[samples];
         }
-
+        /// <summary>
+        /// Berechnet die FFT für ein gegebenes Signal und gibt das Spektrum zurück.
+        /// </summary>
+        /// <param name="daten">Das Eingabesignal im Zeitbereich.</param>
+        /// <param name="nSamples">Anzahl der Abtastpunkte.</param>
+        /// <returns>Das berechnete Spektrum im Frequenzbereich.</returns>
         public double[] FFT(double[] daten, int nSamples)
         {
             data = new komplex[nSamples];
@@ -37,7 +57,7 @@ namespace PatientMonitor
 
             double[] OutPut = new double[nSamples / 2];
 
-            for (int i = 0; i < nSamples / 2; i++)
+            for (int i = 0; i < nSamples / 2; i++) // Initialisiere das komplexe Array mit den Eingabewerten
             {
                 OutPut[i] = Math.Sqrt(data[i].re * data[i].re + data[i].im * data[i].im);
             }
@@ -88,7 +108,7 @@ namespace PatientMonitor
                 }
                 i += k;
             }
-
+            // Iterationsstufen berechnen
             stufen = (int)(Math.Log10((double)samples) /
             Math.Log10((double)2));
             sprung = 2;
@@ -122,7 +142,9 @@ namespace PatientMonitor
                 sprung *= 2;
             }
         }
-
+        /// <summary>
+        /// Eigenschaft zur Verwaltung der Abtastrate.
+        /// </summary>
         public int Abtastrate
         {
             get

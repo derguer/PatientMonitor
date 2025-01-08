@@ -1,16 +1,27 @@
-﻿using System;
+﻿/// <summary>
+/// Die Klasse 'MRImages' verwaltet die Anzeige und Navigation von medizinischen Bildern (MR-Bildern).
+/// Sie ermöglicht das Laden, Vor- und Zurückblättern sowie das Festlegen der maximalen Anzahl von Bildern.
+/// </summary>
+
+using System;
 using System.IO;
 using System.Windows.Media.Imaging;
 
 namespace PatientMonitor
 {
+    /// <summary>
+    /// Die Klasse 'MRImages' dient zum Verwalten und Anzeigen einer Reihe von MR-Bildern.
+    /// </summary>
     public class MRImages
     {
+        // Maximale Anzahl von Bildern
         private int maxImages = 0;
-        private int currentImageIndex = 0;
-        private string stringBase = "";
-        private BitmapImage anImage;
-
+        private int currentImageIndex = 0;   // Aktueller Bildindex
+        private string stringBase = "";// Basisverzeichnis für die Bilder
+        private BitmapImage anImage; // Aktuelles Bild als BitmapImage
+        /// <summary>
+        /// Gibt das aktuell geladene Bild zurück.
+        /// </summary>
         public BitmapImage AnImage
         {
             get { return anImage; }
@@ -51,7 +62,9 @@ namespace PatientMonitor
             currentImageIndex = 0;
             LoadCurrentImage();
         }
-
+        /// <summary>
+        /// Lädt das aktuelle Bild basierend auf dem aktuellen Bildindex.
+        /// </summary>
         private void LoadCurrentImage()
         {
             string currentFileName = Path.Combine(stringBase, $"Base{(currentImageIndex + 1):D2}.bmp");
@@ -65,7 +78,11 @@ namespace PatientMonitor
                 throw new FileNotFoundException($"File not found: {currentFileName}");
             }
         }
-
+        /// <summary>
+        /// Lädt ein Bild von einem angegebenen Pfad und gibt es als BitmapImage zurück.
+        /// </summary>
+        /// <param name="filePath">Der Pfad des Bildes.</param>
+        /// <returns>Das geladene Bild als BitmapImage.</returns>
         public BitmapImage LoadImage(string filePath)
         {
             BitmapImage bitmapImage = new BitmapImage();
@@ -75,11 +92,17 @@ namespace PatientMonitor
             bitmapImage.EndInit();
             return bitmapImage;
         }
-
+        /// <summary>
+        /// Gibt den aktuellen Bildindex und die maximale Anzahl der Bilder als Text zurück.
+        /// </summary>
+        /// <returns>Ein String im Format "aktuellerIndex/maxImages".</returns>
         public string GetImageIndexText()
         {
             return $"{currentImageIndex + 1}/{maxImages}";
         }
+        /// <summary>
+        /// Blättert zum nächsten Bild vor. Falls das letzte Bild erreicht ist, wird zum ersten Bild gewechselt.
+        /// </summary>
         public void ForwardImage()
         {
             if (currentImageIndex + 1 < maxImages) // Prüfen, ob es ein weiteres Bild gibt
@@ -89,11 +112,13 @@ namespace PatientMonitor
             }
             else
             {
-                currentImageIndex = 0;
+                currentImageIndex = 0; // Zurück zum ersten Bild
                 LoadCurrentImage();
             }
         }
-
+        /// <summary>
+        /// Blättert zum vorherigen Bild zurück. Falls das erste Bild erreicht ist, wird zum letzten Bild gewechselt.
+        /// </summary>
         public void BackwardImage()
         {
             if (currentImageIndex > 0) // Prüfen, ob es ein vorheriges Bild gibt
@@ -107,6 +132,10 @@ namespace PatientMonitor
                 LoadCurrentImage();
             }
         }
+        /// <summary>
+        /// Legt die maximale Anzahl der anzuzeigenden Bilder fest und lädt das erste Bild.
+        /// </summary>
+        /// <param name="newMaxImages">Die neue maximale Anzahl der Bilder.</param>
         public void SetMaxImages(int newMaxImages)
         {
             if (newMaxImages <= 0)
@@ -118,6 +147,10 @@ namespace PatientMonitor
             currentImageIndex = 0; // Springe zurück zum ersten Bild
             LoadCurrentImage(); // Lade das erste Bild mit der neuen Begrenzung
         }
+        /// <summary>
+        /// Aktualisiert die maximale Anzahl der Bilder basierend auf der Benutzereingabe.
+        /// </summary>
+        /// <param name="input">Die Eingabe des Benutzers als String.</param>
         public void UpdateMaxImagesFromInput(string input)
         {
             // Versuche, die Eingabe in eine Zahl zu konvertieren
@@ -137,6 +170,9 @@ namespace PatientMonitor
                 throw new ArgumentException("Invalid input. Please enter a positive integer.");
             }
         }
+        /// <summary>
+        /// Gibt die maximale Anzahl der geladenen Bilder zurück.
+        /// </summary>
         public int MaxImages
         {
             get { return maxImages; }
